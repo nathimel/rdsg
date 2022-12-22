@@ -1,0 +1,4 @@
+lower_left: True # (complexity, comm_cost)
+lower_right: True # (simplicity, comm_cost)
+upper_left: True # (complexity, informativity)      
+upper right: True # (simplicity, informativity)

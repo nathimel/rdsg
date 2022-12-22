@@ -1,0 +1,3 @@
+defaults: 
+ - directions: all
+ - pool_size: medium

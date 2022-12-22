@@ -1,0 +1,6 @@
+defaults:
+ - similarity: nosofsky
+ - size: ten
+
+generalization: false
+noisy: false

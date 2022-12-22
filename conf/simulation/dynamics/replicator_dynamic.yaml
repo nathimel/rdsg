@@ -1,0 +1,3 @@
+replicator_dynamics:
+  max_its: 200
+  threshold: 1e-4

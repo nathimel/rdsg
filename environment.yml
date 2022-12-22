@@ -1,0 +1,14 @@
+name: rdsg
+channels:
+  - conda-forge
+dependencies:
+  - pyyaml
+  - black
+  - matplotlib=3.5 # required for plotnine
+  - plotnine
+  - pandas
+  - numpy
+  - tqdm
+  - pip
+  - pip:
+    - hydra-core

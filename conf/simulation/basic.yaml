@@ -1,0 +1,4 @@
+defaults: 
+  - dynamics: reinforcement-learning
+
+num_trials: 1

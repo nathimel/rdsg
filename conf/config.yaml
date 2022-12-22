@@ -1,0 +1,21 @@
+defaults:
+  - game: basic
+  - explore_space: basic
+  - simulation: basic
+  - _self_ # stuff below can override stuff above  
+  
+random_seed: 42
+
+# experiment outputs: uses hydra.job.chdir to unique
+filepaths: 
+  curve_points_save_fn: curve_points.csv
+  simulation_points_save_fn: simulation_points.csv
+  sampled_points_save_fn: sampled_points.csv
+  tradeoff_plot_fn: tradeoff.txt
+
+hydra:
+  job:
+    chdir: True
+
+# for sweeping params
+# python rdsg.py -m game.similarity.param=range(1,5)
