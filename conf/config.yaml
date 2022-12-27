@@ -6,24 +6,27 @@ defaults:
   
 seed: 42
 
-# experiment outputs: uses hydra.job.chdir to unique
 filepaths: 
+  # experiment outputs
   curve_points_save_fn: curve_points.csv
   simulation_points_save_fn: simulation_points.csv
   sampled_points_save_fn: sampled_points.csv
   tradeoff_plot_fn: tradeoff.txt
+  # hydra automatic folder naming
+  subdir: size=${game.size}/similarity=${game.similarity}/distortion=${game.distortion}/dynamics=${simulation.dynamics}/num_trials=${simulation.num_trials}/seed=${seed}  
 
-# for hydra folder naming
-# subdir: /size=${game.size}/similarity=${game.similarity}/distortion=${distortion}/dynamics=${simulation.dynamics}/num_trials=${simulation.num_trials}/seed=${seed}
+
+
 
 hydra:
   run:
-    dir: outputs/size=${game.size}/similarity=${game.similarity}/distortion=${game.distortion}/dynamics=${simulation.dynamics}/num_trials=${simulation.num_trials}/seed=${seed}
+    dir: outputs/${filepaths.subdir}
   job:
     chdir: True
     config:
       override_dirname:
         exclude_keys:
+          - filepaths.subdir
           - game.size
           - game.similarity
           - game.distortion
@@ -32,7 +35,7 @@ hydra:
           - seed
   sweep:
     dir: multirun
-    subdir: size=${game.size}/similarity=${game.similarity}/distortion=${game.distortion}/dynamics=${simulation.dynamics}/num_trials=${simulation.num_trials}/seed=${seed}
+    subdir: ${filepaths.subdir}
   
 # for sweeping params
 # python rdsg.py -m game.similarity.param=range(1,5)
