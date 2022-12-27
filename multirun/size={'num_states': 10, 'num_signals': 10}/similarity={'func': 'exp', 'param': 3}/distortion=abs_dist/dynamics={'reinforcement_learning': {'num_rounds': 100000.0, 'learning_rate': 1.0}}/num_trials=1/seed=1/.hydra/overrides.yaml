@@ -1,0 +1,4 @@
+- game.similarity.param=3
+- seed=1
+- game.similarity.func=exp
+- game.distortion=abs_dist

@@ -2,5 +2,4 @@ defaults:
  - similarity: nosofsky
  - size: ten
 
-generalization: false
-noisy: false
+distortion: squared_dist # squared_dist or abs_dist
