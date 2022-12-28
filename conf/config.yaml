@@ -37,5 +37,5 @@ hydra:
     dir: multirun
     subdir: ${filepaths.leaf_subdir}
   
-# for sweeping params
-# python rdsg.py -m game.similarity.param=range(1,5)
+# example command for sweeping params
+# python rdsg.py -m game.similarity.param=range(1,10, 2)

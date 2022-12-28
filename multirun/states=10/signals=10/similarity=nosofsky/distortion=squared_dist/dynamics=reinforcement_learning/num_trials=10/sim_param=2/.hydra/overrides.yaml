@@ -1,0 +1,3 @@
+- game.similarity.param=2
+- simulation.dynamics.num_rounds=100000.0
+- simulation.num_trials=10
