@@ -1,0 +1,4 @@
+- game.similarity.param=10
+- simulation/dynamics=reinforcement_learning
+- simulation.num_trials=100
+- simulation.dynamics.num_rounds=100000.0
