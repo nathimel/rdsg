@@ -1,0 +1,3 @@
+- simulation.dynamics.num_rounds=10000
+- simulation.num_trials=3
+- simulation.trajectory=True

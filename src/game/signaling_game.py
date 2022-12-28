@@ -2,9 +2,8 @@
 
 import numpy as np
 import pandas as pd
-from game.languages import State, Signal, SignalingLanguage
+from game.languages import State, Signal
 from game.agents import Sender, Receiver
-from misc.util import points_to_df
 
 class SignalingGame:
     """A signaling game is a tuple $(S, M, A, \sigma, \rho, u, P)$ of states, messages, acts, a sender, a receiver, a utility function, and a distribution over states. The sender and receiver have a common payoff, given by a communicative success function.
@@ -56,41 +55,3 @@ class SignalingGame:
             "accuracy": [],  # communicative success
             "points": [],  # (rate, distortion)
         }
-
-##############################################################################
-# Functions for measuring signaling games
-##############################################################################
-
-def trial_to_trajectory_df(sg: SignalingGame) -> pd.DataFrame:
-    """Get a dataframe of each (rate, distortion) point that obtains after a round, for all rounds of a single SignalingGame."""
-    trajectory_points = sg.data["points"]
-    points_df = points_to_df(trajectory_points)
-    points_df["round"] = pd.to_numeric(points_df.index)  # plot needs continuous scale
-    return points_df
-
-
-def trials_to_df(
-    signaling_games: list[SignalingGame],
-    trajectory: bool = False,
-) -> list[tuple[float]]:
-    """Compute the pareto points for a list of resulting simulation languages, based on the distributions of their senders.
-
-    Args:
-        trials: a list of SignalingGames after convergence
-
-        trajectory: whether for each trial to return a DataFrame of final round points or a DataFrame of all rounds points (i.e., the game trajectory).
-
-    Returns:
-        df: a pandas DataFrame of (rate, distortion) points
-    """
-
-    if trajectory:
-        return pd.concat([trial_to_trajectory_df(sg=sg) for sg in signaling_games])
-    
-    return points_to_df([sg.data["points"][-1] for sg in signaling_games])
-
-
-def games_to_languages(games: list[SignalingGame]) -> list[tuple[SignalingLanguage]]:
-    """For each game, extract the sender and receiver's language (signal-state mapping)."""
-    languages = [(agent.to_language() for agent in [g.sender, g.receiver]) for g in games]
-    return languages
