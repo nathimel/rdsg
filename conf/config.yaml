@@ -11,6 +11,7 @@ filepaths:
   curve_points_save_fn: curve_points.csv
   simulation_points_save_fn: simulation_points.csv
   sampled_points_save_fn: sampled_points.csv
+  counterpart_points_fn: counterpart_points.csv
   tradeoff_plot_fn: tradeoff.png
   # hydra automatic folder naming
   game_subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/similarity=${game.similarity.func}/distortion=${game.distortion}
