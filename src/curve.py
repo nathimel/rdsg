@@ -1,41 +1,36 @@
 """Script to estimate the Rate Distortion curve as the Pareto frontier."""
 
-import sys
-import pandas as pd
-from analysis.rd import get_curve_points
+import hydra
+import numpy as np
 from misc import util
-from game.simulation import simulation_parameters
+from analysis.rd import get_curve_points
+from simulation.driver import game_parameters
 
+@hydra.main(version_base=None, config_path="../conf", config_name="config")
+def main(config):
+    util.set_seed(config.seed)
+    kwargs = util.experiment_parameters(config)
+    game_params = game_parameters(**kwargs)
 
-def main():
-    if len(sys.argv) != 2:
-        print("Usage: python3 src/curve.py path_to_config_file")
-        raise TypeError(f"Expected {2} arguments but received {len(sys.argv)}.")
-
-    # Load configs
-    config_fn = sys.argv[1]
-    configs = util.load_configs(config_fn)
-
-    save_fn = configs["filepaths"]["curve_points_save_fn"]
-
-    util.set_seed(configs["random_seed"])
-    kwargs = util.experiment_parameters(configs)
-
-    points = get_curve_points(kwargs["prior_over_states"], kwargs["dist_mat"])
-    util.save_points_csv(save_fn, points)
-
-    # specify additional points to compare beta to gamma
-    gammas = [0.1, 0.5, 0.75, 1.0, 2.0, 5.0, 7.5, 10.0, 100.0, 1000.0]
-    gamma_points = get_curve_points(
-        kwargs["prior_over_states"], kwargs["dist_mat"], betas=gammas
+    # B-A gets a bit sparse in low-rate regions for np.linspace
+    betas = np.concatenate([
+        np.linspace(start=0, stop=0.29, num=33),
+        np.linspace(start=0.3, stop=0.9, num=33),
+        np.linspace(start=1.0, stop=2**7, num=334),
+    ])
+    points = get_curve_points(
+        game_params["prior"],
+        game_params["dist_mat"],
+        betas,
+        unique=True,
     )
-
-    gamma_df = pd.DataFrame(data=gamma_points, columns=["rate", "distortion"])
-    gamma_df["beta"] = gammas
-    fn = save_fn.replace("curve", "gamma")
-    gamma_df.to_csv(fn, index=False)
-    print(f"Saved {len(gamma_points)} language points to {fn}")
-
+    # TODO: save this in fairly high branch, e.g. right after distortion.
+    util.save_points_df(
+        fn=config.filepaths.curve_points_save_fn,
+        df=util.points_to_df(points),
+        )
+    
+    # TODO: use hydra to infer the list of swept alpha values to obtain beta-counterparts
 
 if __name__ == "__main__":
     main()

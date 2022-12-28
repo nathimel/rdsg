@@ -1,4 +1,5 @@
 defaults: 
-  - dynamics: reinforcement-learning
+  - dynamics: reinforcement_learning
 
 num_trials: 1
+trajectory: False

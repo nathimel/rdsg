@@ -1,0 +1,3 @@
+name: reinforcement_learning
+num_rounds: 1e2
+learning_rate: 1.0

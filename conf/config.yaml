@@ -11,12 +11,9 @@ filepaths:
   curve_points_save_fn: curve_points.csv
   simulation_points_save_fn: simulation_points.csv
   sampled_points_save_fn: sampled_points.csv
-  tradeoff_plot_fn: tradeoff.txt
+  tradeoff_plot_fn: tradeoff.png
   # hydra automatic folder naming
-  subdir: size=${game.size}/similarity=${game.similarity}/distortion=${game.distortion}/dynamics=${simulation.dynamics}/num_trials=${simulation.num_trials}/seed=${seed}  
-
-
-
+  subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/similarity=${game.similarity.func}/distortion=${game.distortion}/dynamics=${simulation.dynamics.name}/num_trials=${simulation.num_trials}/sim_param=${game.similarity.param}
 
 hydra:
   run:
@@ -27,12 +24,13 @@ hydra:
       override_dirname:
         exclude_keys:
           - filepaths.subdir
-          - game.size
-          - game.similarity
+          - game.size.num_states
+          - game.size.num_signals
+          - game.similarity.func
+          - game.similarity.param          
           - game.distortion
-          - simulation.dynamics
+          - simulation.dynamics.name
           - simulation.num_trials
-          - seed
   sweep:
     dir: multirun
     subdir: ${filepaths.subdir}
