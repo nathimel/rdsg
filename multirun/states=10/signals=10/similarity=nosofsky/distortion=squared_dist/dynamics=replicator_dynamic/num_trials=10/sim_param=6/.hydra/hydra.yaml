@@ -104,20 +104,23 @@ hydra:
       - file
     disable_existing_loggers: false
   env: {}
-  mode: RUN
+  mode: MULTIRUN
   searchpath: []
   callbacks: {}
   output_subdir: .hydra
   overrides:
     hydra:
-    - hydra.mode=RUN
-    task: []
+    - hydra.mode=MULTIRUN
+    task:
+    - game.similarity.param=6
+    - simulation/dynamics=replicator_dynamic
+    - simulation.num_trials=10
   job:
-    name: curve
+    name: run_simulations
     chdir: true
-    override_dirname: ''
-    id: ???
-    num: ???
+    override_dirname: simulation/dynamics=replicator_dynamic
+    id: '3'
+    num: 3
     config_name: config
     env_set: {}
     env_copy: []
@@ -148,10 +151,10 @@ hydra:
     - path: ''
       schema: structured
       provider: schema
-    output_dir: /Users/nathanielimel/lps/projects/rdsg/outputs/states=10/signals=10/similarity=nosofsky/distortion=squared_dist/dynamics=reinforcement_learning/num_trials=1/sim_param=0
+    output_dir: /Users/nathanielimel/lps/projects/rdsg/multirun/states=10/signals=10/similarity=nosofsky/distortion=squared_dist/dynamics=replicator_dynamic/num_trials=10/sim_param=6
     choices:
       simulation: basic
-      simulation/dynamics: reinforcement_learning
+      simulation/dynamics: replicator_dynamic
       explore_space: basic
       explore_space/pool_size: small
       explore_space/directions: all

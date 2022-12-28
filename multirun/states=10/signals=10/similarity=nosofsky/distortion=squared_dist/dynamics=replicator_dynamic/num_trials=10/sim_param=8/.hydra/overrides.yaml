@@ -1,0 +1,3 @@
+- game.similarity.param=8
+- simulation/dynamics=replicator_dynamic
+- simulation.num_trials=10

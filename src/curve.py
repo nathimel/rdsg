@@ -5,7 +5,9 @@ import os
 import numpy as np
 from misc import util
 from analysis.rd import get_curve_points
+from analysis.measure import interpolate_curve
 from simulation.driver import game_parameters
+
 
 @hydra.main(version_base=None, config_path="../conf", config_name="config")
 def main(config):
@@ -29,9 +31,12 @@ def main(config):
         betas,
         unique=True,
     )
+    # curve must be interpolated before notebook analyses
+    curve_data = interpolate_curve(util.points_to_df(points), max_distortion=30)
+
     util.save_points_df(
         fn=curve_fn,
-        df=util.points_to_df(points),
+        df=curve_data,
         )
     
     # TODO: use hydra to infer the list of swept alpha values to obtain beta-counterparts

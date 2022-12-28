@@ -68,19 +68,24 @@ def rows_zero_to_uniform(mat):
             else np.ones(len(row)) / len(row) for row in mat
         ])
 
-def interpolate_curve(curve_data: pd.DataFrame, sampled_data: pd.DataFrame = None) -> pd.DataFrame:
+def interpolate_curve(curve_data: pd.DataFrame, sampled_data: pd.DataFrame = None, max_distortion: float = 0) -> pd.DataFrame:
     """Interpolate curve data so that it bounds all explored languages. Use the maximum of distortion values attained by both BA and exploration.
     
     Args:
         curve_data: a DataFrame of Rate-Distortion curve points from BA algorithm
 
-        sampled_data: a DataFrame of the explored languages
+        sampled_data: an optional DataFrame of the explored languages
+
+        max_distortion: an optional value specifying the maximum distortion
     """
     # interpolate points to max cost of sampled data
     if sampled_data is not None:
         max_cost = max(sampled_data["distortion"].max(), curve_data["distortion"].max())
     else:
         max_cost = curve_data["distortion"].max()
+    
+    if max_distortion > max_cost:
+        max_cost = max_distortion
 
     # get curve points as list of pairs
     points = list(curve_data.itertuples(index=False, name=None))

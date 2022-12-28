@@ -113,12 +113,12 @@ hydra:
     - hydra.mode=MULTIRUN
     task:
     - game.similarity.param=range(0,11,2)
-    - simulation.dynamics.num_rounds=1e5
-    - simulation.num_trials=10
+    - simulation/dynamics=replicator_dynamic
+    - simulation.num_trials=100
   job:
     name: run_simulations
     chdir: true
-    override_dirname: simulation.dynamics.num_rounds=1e5
+    override_dirname: simulation/dynamics=replicator_dynamic
     id: ???
     num: ???
     config_name: config
@@ -154,7 +154,7 @@ hydra:
     output_dir: ???
     choices:
       simulation: basic
-      simulation/dynamics: reinforcement_learning
+      simulation/dynamics: replicator_dynamic
       explore_space: basic
       explore_space/pool_size: small
       explore_space/directions: all
@@ -191,10 +191,10 @@ explore_space:
     num_generations: 10
 simulation:
   dynamics:
-    name: reinforcement_learning
-    num_rounds: 100000.0
-    learning_rate: 1.0
-  num_trials: 10
+    name: replicator_dynamic
+    max_its: 200
+    threshold: 1.0e-05
+  num_trials: 100
   trajectory: false
 seed: 42
 filepaths:
