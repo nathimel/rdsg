@@ -38,7 +38,7 @@ def experiment_parameters(config: dict[str, Any]) -> dict[str, Any]:
         "similarity": config.game.similarity.func,
         "sim_param": config.game.similarity.param,
         "explore_directions": config.explore_space.directions,
-        "seed_gen_size": config.explore_space.pool_size.seed_generation_size,
+        "seed_gen_size": int(float(config.explore_space.pool_size.seed_generation_size)),
         "max_mutations": config.explore_space.pool_size.max_mutations,
         "num_generations": config.explore_space.pool_size.num_generations,
         "num_trials": config.simulation.num_trials,

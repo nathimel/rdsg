@@ -13,26 +13,26 @@ def basic_tradeoff_plot(
         # Set data and the axes
         pn.ggplot(
             data=pareto_data, mapping=pn.aes(x="rate", y="distortion")
-        )  # pareto data
-        + pn.geom_line(size=2)
-        + pn.geom_point(  # simulation langs
-            sim_data,
-            color="blue",
-            shape="o",
-            size=4,
         )
         + pn.xlab("Rate I(S;A)")
-        + pn.ylab("Distortion d(S, A)")
+        + pn.ylab("Distortion D[S, A]")
         + pn.scale_color_cmap("cividis")
     )
-    if sampled_data is not None:
-        plot = plot + pn.geom_point(
+    if sampled_data is not None: 
+        plot = plot + pn.geom_point( # hypothetical langs bottom layer
             sampled_data,
             color="gray",
             shape="o",
             size=2,
             alpha=0.6,
         )
+    plot = plot + pn.geom_point(  # simulation langs
+        sim_data,
+        color="blue",
+        shape="o",
+        size=4,
+    )        
+    plot = plot + pn.geom_line(size=2) # pareto frontier last
     return plot
 
 

@@ -13,9 +13,9 @@ explore_space:
     upper_left: true
     upper right: true
   pool_size:
-    seed_generation_size: 1000.0
+    seed_generation_size: 10
     max_mutations: 3
-    num_generations: 100
+    num_generations: 10
 simulation:
   dynamics:
     name: reinforcement_learning
@@ -29,4 +29,6 @@ filepaths:
   simulation_points_save_fn: simulation_points.csv
   sampled_points_save_fn: sampled_points.csv
   tradeoff_plot_fn: tradeoff.png
-  subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/similarity=${game.similarity.func}/distortion=${game.distortion}/dynamics=${simulation.dynamics.name}/num_trials=${simulation.num_trials}/sim_param=${game.similarity.param}
+  game_subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/similarity=${game.similarity.func}/distortion=${game.distortion}
+  simulation_subdir: dynamics=${simulation.dynamics.name}/num_trials=${simulation.num_trials}/sim_param=${game.similarity.param}
+  leaf_subdir: ${filepaths.game_subdir}/${filepaths.simulation_subdir}

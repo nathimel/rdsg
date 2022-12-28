@@ -13,17 +13,19 @@ filepaths:
   sampled_points_save_fn: sampled_points.csv
   tradeoff_plot_fn: tradeoff.png
   # hydra automatic folder naming
-  subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/similarity=${game.similarity.func}/distortion=${game.distortion}/dynamics=${simulation.dynamics.name}/num_trials=${simulation.num_trials}/sim_param=${game.similarity.param}
+  game_subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/similarity=${game.similarity.func}/distortion=${game.distortion}
+  simulation_subdir: dynamics=${simulation.dynamics.name}/num_trials=${simulation.num_trials}/sim_param=${game.similarity.param}
+  leaf_subdir: ${filepaths.game_subdir}/${filepaths.simulation_subdir}
 
 hydra:
   run:
-    dir: outputs/${filepaths.subdir}
+    dir: outputs/${filepaths.leaf_subdir}
   job:
     chdir: True
     config:
       override_dirname:
         exclude_keys:
-          - filepaths.subdir
+          - filepaths.leaf_subdir
           - game.size.num_states
           - game.size.num_signals
           - game.similarity.func
@@ -33,7 +35,7 @@ hydra:
           - simulation.num_trials
   sweep:
     dir: multirun
-    subdir: ${filepaths.subdir}
+    subdir: ${filepaths.leaf_subdir}
   
 # for sweeping params
 # python rdsg.py -m game.similarity.param=range(1,5)

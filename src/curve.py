@@ -1,6 +1,7 @@
 """Script to estimate the Rate Distortion curve as the Pareto frontier."""
 
 import hydra
+import os
 import numpy as np
 from misc import util
 from analysis.rd import get_curve_points
@@ -11,6 +12,10 @@ def main(config):
     util.set_seed(config.seed)
     kwargs = util.experiment_parameters(config)
     game_params = game_parameters(**kwargs)
+
+    # save one curve for multiple analyses
+    game_dir = os.getcwd().replace(config.filepaths.simulation_subdir, "")
+    curve_fn = os.path.join(game_dir, config.filepaths.curve_points_save_fn)    
 
     # B-A gets a bit sparse in low-rate regions for np.linspace
     betas = np.concatenate([
@@ -24,9 +29,8 @@ def main(config):
         betas,
         unique=True,
     )
-    # TODO: save this in fairly high branch, e.g. right after distortion.
     util.save_points_df(
-        fn=config.filepaths.curve_points_save_fn,
+        fn=curve_fn,
         df=util.points_to_df(points),
         )
     

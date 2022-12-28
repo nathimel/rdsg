@@ -1,9 +1,9 @@
 hydra:
   run:
-    dir: outputs/${filepaths.subdir}
+    dir: outputs/${filepaths.leaf_subdir}
   sweep:
     dir: multirun
-    subdir: ${filepaths.subdir}
+    subdir: ${filepaths.leaf_subdir}
   launcher:
     _target_: hydra._internal.core_plugins.basic_launcher.BasicLauncher
   sweeper:
@@ -126,7 +126,7 @@ hydra:
         kv_sep: '='
         item_sep: ','
         exclude_keys:
-        - filepaths.subdir
+        - filepaths.leaf_subdir
         - game.size.num_states
         - game.size.num_signals
         - game.similarity.func
@@ -153,7 +153,7 @@ hydra:
       simulation: basic
       simulation/dynamics: reinforcement_learning
       explore_space: basic
-      explore_space/pool_size: medium
+      explore_space/pool_size: small
       explore_space/directions: all
       game: basic
       game/size: ten

@@ -2,13 +2,16 @@ name: rdsg
 channels:
   - conda-forge
 dependencies:
-  - pyyaml
-  - black
-  - matplotlib=3.5 # required for plotnine
-  - plotnine
+  - matplotlib=3.5
   - pandas
-  - numpy
   - tqdm
+  - black
+  - plotnine
   - pip
   - pip:
-    - hydra-core
+    - hydra-core  
+  - pyyaml
+  - numpy
+  - pygmo
+  - pathos
+prefix: /Users/nathanielimel/miniforge3/envs/rdsg
