@@ -113,11 +113,10 @@ hydra:
     - hydra.mode=RUN
     task:
     - simulation.num_trials=2
-    - simulation.dynamics.num_rounds=1e5
   job:
     name: run_simulations
     chdir: true
-    override_dirname: simulation.dynamics.num_rounds=1e5
+    override_dirname: ''
     id: ???
     num: ???
     config_name: config
@@ -155,7 +154,7 @@ hydra:
       simulation: basic
       simulation/dynamics: reinforcement_learning
       explore_space: basic
-      explore_space/pool_size: medium
+      explore_space/pool_size: small
       explore_space/directions: all
       game: basic
       game/size: ten

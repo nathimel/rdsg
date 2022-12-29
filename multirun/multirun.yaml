@@ -114,14 +114,14 @@ hydra:
     task:
     - game/similarity=exp
     - game.distortion=abs_dist
-    - simulation.num_trials=10
+    - simulation.num_trials=1
     - simulation.dynamics.num_rounds=1e5
-    - explore_space/pool_size=medium
-    - game.similarity.param=0.1, 0.2
+    - explore_space/pool_size=large
+    - game.similarity.param=0.1, 0.2, 0.5, 0.75, 1, 2, 3, 5, 1000
   job:
     name: run_simulations
     chdir: true
-    override_dirname: explore_space/pool_size=medium,game/similarity=exp,simulation.dynamics.num_rounds=1e5
+    override_dirname: explore_space/pool_size=large,game/similarity=exp,simulation.dynamics.num_rounds=1e5
     id: ???
     num: ???
     config_name: config
@@ -159,7 +159,7 @@ hydra:
       simulation: basic
       simulation/dynamics: reinforcement_learning
       explore_space: basic
-      explore_space/pool_size: medium
+      explore_space/pool_size: large
       explore_space/directions: all
       game: basic
       game/size: ten
@@ -190,14 +190,14 @@ explore_space:
     upper right: true
   pool_size:
     seed_generation_size: 1000.0
-    max_mutations: 3
-    num_generations: 100
+    max_mutations: 5
+    num_generations: 200
 simulation:
   dynamics:
     name: reinforcement_learning
     num_rounds: 100000.0
     learning_rate: 1.0
-  num_trials: 10
+  num_trials: 1
   trajectory: false
 seed: 42
 filepaths:

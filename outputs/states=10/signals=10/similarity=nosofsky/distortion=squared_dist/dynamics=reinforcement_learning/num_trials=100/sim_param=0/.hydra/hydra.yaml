@@ -112,15 +112,12 @@ hydra:
     hydra:
     - hydra.mode=RUN
     task:
-    - game/similarity=exp
-    - game.distortion=abs_dist
-    - simulation.num_trials=1
+    - simulation.num_trials=100
     - simulation.dynamics.num_rounds=1e5
-    - explore_space/pool_size=large
   job:
-    name: explore
+    name: run_simulations
     chdir: true
-    override_dirname: explore_space/pool_size=large,game/similarity=exp,simulation.dynamics.num_rounds=1e5
+    override_dirname: simulation.dynamics.num_rounds=1e5
     id: ???
     num: ???
     config_name: config
@@ -153,16 +150,16 @@ hydra:
     - path: ''
       schema: structured
       provider: schema
-    output_dir: /Users/nathanielimel/lps/projects/rdsg/outputs/states=10/signals=10/similarity=exp/distortion=abs_dist/dynamics=reinforcement_learning/num_trials=1/sim_param=1000
+    output_dir: /Users/nathanielimel/lps/projects/rdsg/outputs/states=10/signals=10/similarity=nosofsky/distortion=squared_dist/dynamics=reinforcement_learning/num_trials=100/sim_param=0
     choices:
       simulation: basic
       simulation/dynamics: reinforcement_learning
       explore_space: basic
-      explore_space/pool_size: large
+      explore_space/pool_size: small
       explore_space/directions: all
       game: basic
       game/size: ten
-      game/similarity: exp
+      game/similarity: nosofsky
       hydra/env: default
       hydra/callbacks: null
       hydra/job_logging: default

@@ -9,10 +9,11 @@ from game.agents import Sender, Receiver
 from game.languages import State, Signal, StateSpace, SignalMeaning, SignalingLanguage
 from game.signaling_game import SignalingGame
 from game import perception
-
 from misc.util import points_to_df
-
 from simulation.dynamics import dynamics_map
+
+from multiprocessing import Pool, cpu_count
+from functools import partial
 
 
 def game_parameters(
@@ -84,7 +85,15 @@ def run_trials(
     **kwargs,
 ) -> list[SignalingGame]:
     """Run a simulation for multiple trials."""
-    return [run_simulation(*args, **kwargs) for _ in tqdm(range(kwargs["num_trials"]))]
+    # use multiprocessing
+    with Pool(cpu_count()) as p:
+        async_results = [
+            p.apply_async(run_simulation, args=args, kwds=kwargs)
+            for _ in tqdm(range(kwargs["num_trials"]))
+        ]
+        p.close()
+        p.join()
+    return [async_result.get() for async_result in async_results]
 
 
 def run_simulation(

@@ -1,7 +1,7 @@
 game:
   similarity:
     func: exp
-    param: 1000
+    param: 0.1
   size:
     num_states: 10
     num_signals: 10

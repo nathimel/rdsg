@@ -1,11 +1,11 @@
 game:
   similarity:
-    func: exp
-    param: 1000
+    func: nosofsky
+    param: 0
   size:
     num_states: 10
     num_signals: 10
-  distortion: abs_dist
+  distortion: squared_dist
 explore_space:
   directions:
     lower_left: true
@@ -13,15 +13,15 @@ explore_space:
     upper_left: true
     upper right: true
   pool_size:
-    seed_generation_size: 1000.0
-    max_mutations: 5
-    num_generations: 200
+    seed_generation_size: 10
+    max_mutations: 3
+    num_generations: 10
 simulation:
   dynamics:
     name: reinforcement_learning
-    num_rounds: 100000.0
+    num_rounds: 100.0
     learning_rate: 1.0
-  num_trials: 1
+  num_trials: 10
   trajectory: false
 seed: 42
 filepaths:
