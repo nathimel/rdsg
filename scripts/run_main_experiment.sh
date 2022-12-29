@@ -1,7 +1,6 @@
 #!/bin/sh
 
-# Example: ./scripts/run_blah.sh
-
+# TODO: add command line args
 python src/run_simulations.py
 
 python src/explore.py
