@@ -37,21 +37,33 @@ def main(config):
     )
     points = ba(betas)
     # curve must be interpolated before notebook analyses
-    curve_data = interpolate_curve(util.points_to_df(points), max_distortion=30)
+    curve_data = interpolate_curve(
+        util.points_to_df(points), 
+        max_distortion=0,
+        )
 
     util.save_points_df(
         fn=curve_fn,
         df=curve_data,
     )
 
-    # TODO: use hydra to infer the list of swept alpha values to obtain beta-counterparts
-    alphas = np.array(range(0, 11, 2)).astype(float)
-    betas = alphas**-2
-    # 0 ** -2 \to \infty, just use 1000
-    betas[0] = 1000
-    df = util.points_to_df(ba(betas))
-    df["beta"] = betas
-    df["alpha"] = alphas
+    # TODO: use hydra to infer the list of swept alpha values to obtain beta-counterparts, which depends on similarity, distortion
+
+    if kwargs["similarity"] == "nosofksy":
+        alphas = np.array(range(0, 11, 2)).astype(float)
+        betas = alphas**-2
+        # 0 ** -2 \to \infty, just use 1000
+        betas[0] = 1000
+        df = util.points_to_df(ba(betas))
+        df["beta"] = betas
+        df["alpha"] = alphas        
+
+    else: # exp or exp normed
+        betas = [0, 0.1, 0.2, 0.5, 0.75, 1, 2, 3, 5, 1000]
+        betas = np.array(betas).astype(float)
+        df = util.points_to_df(ba(betas))
+        df["beta"] = betas
+
     util.save_points_df(counterparts_fn, df)
 
 

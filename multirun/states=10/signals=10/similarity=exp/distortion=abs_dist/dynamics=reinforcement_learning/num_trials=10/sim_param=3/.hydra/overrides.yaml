@@ -1,0 +1,6 @@
+- game/similarity=exp
+- game.distortion=abs_dist
+- simulation.num_trials=10
+- simulation.dynamics.num_rounds=100000.0
+- explore_space/pool_size=medium
+- game.similarity.param=3

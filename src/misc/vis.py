@@ -12,8 +12,8 @@ def basic_tradeoff_plot(
     plot = (
         # Set data and the axes
         pn.ggplot(data=pareto_data, mapping=pn.aes(x="rate", y="distortion"))
-        + pn.xlab("Rate I(S;A)")
-        + pn.ylab("Distortion D[S, A]")
+        + pn.xlab("Complexity $I(S;\hat{S})$")
+        + pn.ylab("Communicative Cost $D[S, \hat{S}]$")
         + pn.scale_color_cmap("cividis")
     )
     if sampled_data is not None:
@@ -70,8 +70,8 @@ def time_tradeoff_plot(
             size=4,
         )
         + pn.geom_line(size=1)
-        + pn.xlab("Rate I(S;A)")
-        + pn.ylab("Distortion d(S, A)")
+        + pn.xlab("Complexity $I(S;\hat{S})$")
+        + pn.ylab("Communicative Cost $D[S, \hat{S}]$")
         + pn.scale_color_cmap("cividis")
     )
     return plot

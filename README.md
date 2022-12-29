@@ -6,7 +6,7 @@ The codebase is organized around the following steps of the experiment.
 
 ## Setting up an experiment
 
-There are a number of important parameters to configure, detailed below.
+There are a number of important parameters to configure, including:
 
 - Game size (number of states, signals)
 - Distortion measure (e.g. squared distance, absolute difference)
@@ -14,7 +14,6 @@ There are a number of important parameters to configure, detailed below.
 - (Im)precision parameter input to the similarity function
 - Adaptive [dynamics](src/simulation/dynamics.py) for modeling evolution (replicator dynamic vs. reinforcement learning)
 - How many trials to run and for how long
-- see below for using Hydra to sweep over parameter combinations
 
 This codebase uses [hydra](https://hydra.cc/) to organize configurations and outputs:
 

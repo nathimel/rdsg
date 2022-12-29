@@ -112,15 +112,16 @@ hydra:
     hydra:
     - hydra.mode=MULTIRUN
     task:
-    - simulation/dynamics=reinforcement_learning
+    - game/similarity=exp
+    - game.distortion=abs_dist
     - simulation.num_trials=10
-    - simulation.trajectory=True
-    - game.similarity.param=range(0, 11, 2)
     - simulation.dynamics.num_rounds=1e5
+    - explore_space/pool_size=medium
+    - game.similarity.param=0.1, 0.2
   job:
     name: run_simulations
     chdir: true
-    override_dirname: simulation.dynamics.num_rounds=1e5,simulation.trajectory=True,simulation/dynamics=reinforcement_learning
+    override_dirname: explore_space/pool_size=medium,game/similarity=exp,simulation.dynamics.num_rounds=1e5
     id: ???
     num: ???
     config_name: config
@@ -158,11 +159,11 @@ hydra:
       simulation: basic
       simulation/dynamics: reinforcement_learning
       explore_space: basic
-      explore_space/pool_size: small
+      explore_space/pool_size: medium
       explore_space/directions: all
       game: basic
       game/size: ten
-      game/similarity: nosofsky
+      game/similarity: exp
       hydra/env: default
       hydra/callbacks: null
       hydra/job_logging: default
@@ -175,12 +176,12 @@ hydra:
   verbose: false
 game:
   similarity:
-    func: nosofsky
-    param: 0
+    func: exp
+    param: 1000
   size:
     num_states: 10
     num_signals: 10
-  distortion: squared_dist
+  distortion: abs_dist
 explore_space:
   directions:
     lower_left: true
@@ -188,16 +189,16 @@ explore_space:
     upper_left: true
     upper right: true
   pool_size:
-    seed_generation_size: 10
+    seed_generation_size: 1000.0
     max_mutations: 3
-    num_generations: 10
+    num_generations: 100
 simulation:
   dynamics:
     name: reinforcement_learning
     num_rounds: 100000.0
     learning_rate: 1.0
   num_trials: 10
-  trajectory: true
+  trajectory: false
 seed: 42
 filepaths:
   curve_points_save_fn: curve_points.csv
