@@ -8,8 +8,6 @@ The codebase is organized around the following steps of the experiment.
 
 There are a number of important parameters to configure, detailed below.
 
-Important parameters to configure are:
-
 - Game size (number of states, signals)
 - Distortion measure (e.g. squared distance, absolute difference)
 - Similarity function (see the [perception](src/game/perception.py) submodule)
@@ -24,9 +22,7 @@ This codebase uses [hydra](https://hydra.cc/) to organize configurations and out
 
 - Running the shell script [run.sh](scripts/run.sh) will generate folders and files in [outputs](outputs), where a `.hydra` folder will be found with a `config.yaml` file. Reference this file as an exhaustive list of config fields to override.
 
-
 ## Requirements  
-
 
 Step 1. Create the conda environment:
 
@@ -40,12 +36,9 @@ Step 2. Install ALTK via git:
 
     `python3 -m pip install git+https://github.com/nathimel/altk.git`
 
-
-
 ## Replicating the experimental results
 
 The main experimental results can be reproduced by running `./scripts/run_main_experiment.sh`.
-
 
 This will perform four basic steps by running the following scripts:
 
