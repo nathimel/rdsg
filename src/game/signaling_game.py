@@ -5,6 +5,7 @@ import pandas as pd
 from game.languages import State, Signal
 from game.agents import Sender, Receiver
 
+
 class SignalingGame:
     """A signaling game is a tuple $(S, M, A, \sigma, \rho, u, P)$ of states, messages, acts, a sender, a receiver, a utility function, and a distribution over states. The sender and receiver have a common payoff, given by a communicative success function.
 

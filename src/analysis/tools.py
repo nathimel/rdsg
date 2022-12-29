@@ -6,8 +6,10 @@ PRECISION = 1e-16
 def abs_dist(t: int, u: int) -> float:
     return np.abs(t - u)
 
+
 def squared_dist(t: int, u: int) -> float:
     return (t - u) ** 2
+
 
 distortion_measures = {
     "abs_dist": abs_dist,
@@ -57,4 +59,3 @@ def bayes(pY_X, pX):
     pXY = joint(pY_X, pX)
     pY = marginalize(pY_X, pX)
     return np.where(pY > PRECISION, pXY.T / pY, 1 / pXY.shape[0])
-

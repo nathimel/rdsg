@@ -5,12 +5,13 @@ from game.languages import StateSpace, State
 from typing import Callable
 from analysis.tools import distortion_measures
 
+
 def generate_dist_matrix(
-    universe: StateSpace, 
-    distortion: str = 'squared_dist',
-    ) -> np.ndarray:
+    universe: StateSpace,
+    distortion: str = "squared_dist",
+) -> np.ndarray:
     """Given a universe, compute the distortion for every pair of points in the universe.
-    
+
     Args:
         universe: a StateSpace such that objects bear Euclidean distance relations
 
@@ -18,19 +19,20 @@ def generate_dist_matrix(
     """
     return np.array(
         [
-            np.array([distortion_measures[distortion](t.weight, u.weight) for u in universe.referents])
+            np.array(
+                [
+                    distortion_measures[distortion](t.weight, u.weight)
+                    for u in universe.referents
+                ]
+            )
             for t in universe.referents
         ]
     )
 
 
-def generate_sim_matrix(
-    universe: StateSpace, 
-    similarity: str, 
-    **kwargs
-    ) -> np.ndarray:
+def generate_sim_matrix(universe: StateSpace, similarity: str, **kwargs) -> np.ndarray:
     """Given a universe, compute a similarity score for every pair of points in the universe.
-    
+
     NB: this is a wrapper function that generates the similarity matrix using the data contained in each State.
 
     Args:
@@ -44,7 +46,7 @@ def generate_sim_matrix(
     return np.array(
         [
             sim_func(
-                target=t.weight, 
+                target=t.weight,
                 objects=[u.weight for u in universe.referents],
                 **kwargs,
             )
@@ -58,13 +60,14 @@ def generate_sim_matrix(
 ##############################################################################
 # N.B.: we use **kwargs so that sim_func() can have the same API
 
+
 def exp(
-    target: int, 
-    objects: np.ndarray, 
-    gamma: float = 1.0, 
-    distortion: str = 'squared_dist', 
+    target: int,
+    objects: np.ndarray,
+    gamma: float = 1.0,
+    distortion: str = "squared_dist",
     **kwargs,
-    ) -> np.ndarray:
+) -> np.ndarray:
     """The (unnormalied) exponential function sim(x,y) = exp(-gamma * d(x,y)).
 
     Args:
@@ -78,12 +81,18 @@ def exp(
 
     Returns:
         a similarity matrix representing pairwise inverse distance between states
-    """    
+    """
     exp_term = lambda t, u: -gamma * distortion_measures[distortion](t, u)
     return np.exp(np.array([exp_term(target, u) for u in objects]))
 
 
-def exp_normed(target: int, objects: np.ndarray, gamma: float = 1.0, distortion: str = 'squared_dist', **kwargs) -> np.ndarray:
+def exp_normed(
+    target: int,
+    objects: np.ndarray,
+    gamma: float = 1.0,
+    distortion: str = "squared_dist",
+    **kwargs,
+) -> np.ndarray:
     """The (normalized) exponential function, aka softmax, sim(x,y) = exp(-gamma * d(x,y)) / Z.
 
     Args:
@@ -97,19 +106,20 @@ def exp_normed(target: int, objects: np.ndarray, gamma: float = 1.0, distortion:
 
     Returns:
         a similarity matrix representing pairwise inverse distance between states
-    """    
+    """
     exp_arr = exp(target, objects, gamma, distortion)
     return exp_arr / exp_arr.sum()
 
+
 def nosofsky(
-    target: int, 
-    objects: np.ndarray, 
+    target: int,
+    objects: np.ndarray,
     alpha: float = 0.0,
     **kwargs,
-    ) -> np.ndarray:
+) -> np.ndarray:
     """The (Gaussian) perceptual similarity function given by Nosofsky 1986:
 
-        sim_alpha(target, object) = 
+        sim_alpha(target, object) =
         {
             1   if  alpha = 0 and target == object
             0   if  alpha = 0 and target != object
@@ -120,12 +130,16 @@ def nosofsky(
     where alpha is an imprecision parameter. When alpha = 0, agents perfectly discriminate between states; when alpha -> infty, agents cannot discriminate states at all. (Compare to gamma in exp and sofmax, which is s.t. perfect discrimination at infty, and homogeneity at 0.)
     """
     if alpha < 0:
-        raise ValueError(f"Imprecision parameter alpha must be nonnegative, received {alpha}.")
+        raise ValueError(
+            f"Imprecision parameter alpha must be nonnegative, received {alpha}."
+        )
 
     if alpha == 0:
         sim_point = lambda u: int(target == u)
     if alpha > 0:
-        sim_point = lambda u: np.exp(-distortion_measures["squared_dist"](target, u) / (alpha ** 2))
+        sim_point = lambda u: np.exp(
+            -distortion_measures["squared_dist"](target, u) / (alpha**2)
+        )
 
     return np.array([sim_point(u) for u in objects])
 
@@ -135,6 +149,7 @@ similarity_functions = {
     "exp_normed": exp_normed,
     "nosofsky": nosofsky,
 }
+
 
 def sim_utility(x: State, y: State, sim_mat: np.ndarray) -> float:
     return sim_mat[int(x.weight), int(y.weight)]

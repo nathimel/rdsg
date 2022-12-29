@@ -14,7 +14,7 @@ def get_curve_points(
     rd = lambda beta: blahut_arimoto(dist_mat, p_x=prior, beta=beta)
     pareto_points = [rd(beta) for beta in betas]
 
-    # remove non-smoothness 
+    # remove non-smoothness
     if unique:
         pareto_df = pd.DataFrame(data=pareto_points, columns=["rate", "distortion"])
         pareto_df = pareto_df.drop_duplicates(subset=["rate"])
@@ -88,12 +88,10 @@ def blahut_arimoto(
         distortion: total distortion between X, X_hat
     """
     # start with iid conditional distribution, as p(x) may not be uniform
-    p_xhat_x = np.tile(
-        p_x, (dist_mat.shape[1], 1)
-    ).T
+    p_xhat_x = np.tile(p_x, (dist_mat.shape[1], 1)).T
 
     # normalize
-    p_x /= np.sum(p_x) 
+    p_x /= np.sum(p_x)
     p_xhat_x /= np.sum(p_xhat_x, 1, keepdims=True)
 
     it = 0

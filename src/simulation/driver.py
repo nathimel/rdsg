@@ -14,6 +14,7 @@ from misc.util import points_to_df
 
 from simulation.dynamics import dynamics_map
 
+
 def game_parameters(
     num_states: int,
     num_signals: int,
@@ -45,9 +46,7 @@ def game_parameters(
 
     # Create a seed language to initialize agents.
     seed_language = SignalingLanguage(signals=signals)
-    sender = Sender(
-        seed_language, name="sender"
-    )
+    sender = Sender(seed_language, name="sender")
     receiver = Receiver(seed_language, name="receiver")
 
     # specify prior and distortion matrix for all trials
@@ -59,10 +58,10 @@ def game_parameters(
     sim_kwargs = {"distortion": kwargs["distortion"]}
     if similarity == "nosofsky":
         sim_kwargs["alpha"] = kwargs["sim_param"]
-    elif similarity in ["exp", "exp_normed"]: 
+    elif similarity in ["exp", "exp_normed"]:
         sim_kwargs["gamma"] = kwargs["sim_param"]
     utility = perception.generate_sim_matrix(universe, similarity, **sim_kwargs)
-    
+
     # parameters for a signaling game
     return {
         "states": universe.referents,
@@ -74,9 +73,11 @@ def game_parameters(
         "dist_mat": kwargs["dist_mat"],
     }
 
+
 ##############################################################################
 # Helper functions for running experiments
 ##############################################################################
+
 
 def run_trials(
     *args,
@@ -101,9 +102,9 @@ def run_simulation(
 # Functions for measuring signaling games
 ##############################################################################
 
+
 def mean_trajectory(trials: list[SignalingGame]) -> pd.DataFrame:
-    """Compute the mean (rate, distortion) trajectory of a game across trials.
-    """
+    """Compute the mean (rate, distortion) trajectory of a game across trials."""
 
     # extrapolate values since replicator dynamic converges early
     lengths = np.array([len(trial.data["points"]) for trial in trials])
@@ -111,14 +112,14 @@ def mean_trajectory(trials: list[SignalingGame]) -> pd.DataFrame:
     if np.all(lengths == max_length):
         # no need to extrapolate
         points = np.array([np.array(trial.data["points"]) for trial in trials])
-    
+
     else:
         # pad each array with its final value
         extrapolated = []
         for trial in trials:
             points = np.array(trial.data["points"])
-            extra = points[-1] * np.ones((max_length, 2)) # 2D array of points
-            extra[:len(points)] = points
+            extra = points[-1] * np.ones((max_length, 2))  # 2D array of points
+            extra[: len(points)] = points
             extrapolated.append(extra)
         points = np.array(extrapolated)
 
@@ -127,6 +128,7 @@ def mean_trajectory(trials: list[SignalingGame]) -> pd.DataFrame:
     points_df = points_to_df(points)
     points_df["round"] = pd.to_numeric(points_df.index)  # continuous scale
     return points_df
+
 
 def trial_to_trajectory_df(sg: SignalingGame) -> pd.DataFrame:
     """Get a dataframe of each (rate, distortion) point that obtains after a round, for all rounds of a single SignalingGame."""
@@ -153,11 +155,13 @@ def trials_to_df(
 
     if trajectory:
         return pd.concat([trial_to_trajectory_df(sg=sg) for sg in signaling_games])
-    
+
     return points_to_df([sg.data["points"][-1] for sg in signaling_games])
 
 
 def games_to_languages(games: list[SignalingGame]) -> list[tuple[SignalingLanguage]]:
     """For each game, extract the sender and receiver's language (signal-state mapping)."""
-    languages = [(agent.to_language() for agent in [g.sender, g.receiver]) for g in games]
+    languages = [
+        (agent.to_language() for agent in [g.sender, g.receiver]) for g in games
+    ]
     return languages

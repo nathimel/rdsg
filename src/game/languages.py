@@ -6,7 +6,7 @@ from altk.language.semantics import Universe, Meaning, Referent
 
 
 class State(Referent):
-    """In a simple Lewis-Skyrms signaling game, a state represents the observed input to a Sender and the chosen action of a Receiver; in both cases the state can be naturally interpreted as a meaning. Then the signaling game is about Receiver guessing Sender's intended meanings."""
+    """In a simple Lewis-Skyrms signaling game, a state represents the observed input to a Sender and the chosen action of a Receiver. If we want a signaling game to be about Receiver guessing Sender's intended meanings, we identify acts with states."""
 
     def __init__(self, name: str, weight: float = None) -> None:
         """
@@ -46,10 +46,9 @@ class SignalMeaning(Meaning):
     def __init__(self, states: list[State], universe: StateSpace) -> None:
         """Construct the meaning of a signal as the set of states it can refer to.
 
-        In altk, Meanings can be generalized from a set of referents to distributions over those referents. by default, we let be a peaked distribution over a single point, where one state has probability 1.0, and all others 0.0.
+        In altk, Meanings can be generalized from a set of referents to distributions over those referents.
 
         Args:
-
             states: the list of atomic states that a signal can be used to communicate.
 
             universe: the semantic space that the signal meaning is a subset of.
@@ -64,7 +63,7 @@ class SignalMeaning(Meaning):
 class Signal(Expression):
     """In the simple atomic signaling game, a signal is a single discrete symbol encoding one or more states.
 
-    One of the senses in which the signaling game is 'atomic' is that the signals are atomic -- they do not encode any special structure (e.g. features such as size, color, etc.). The only information they can encode about the states of nature are their identity.
+    One of the senses in which the Lewis-Skyrms signaling game is 'atomic' is that the signals are atomic -- they do not encode any special structure (e.g. features such as size, color, etc.). The only information they can encode about the states of nature are their identity.
     """
 
     def __init__(self, form: str, meaning: SignalMeaning = None):
@@ -73,7 +72,6 @@ class Signal(Expression):
         We treat signals as equal up to form, even they might communicate different meanings. Note the `__eq__` and `__hash__` implementations encode this choice.
 
         Args:
-
             form: a str representing the identity of the signal, e.g. the sound a Sender produces and a Receiver hears.
 
             meaning: a SignalMeaning representing the set of states the signal can be used to refer to. Default is None to reflect the idea that in signaling games, signals do not have a standing meaning until convention is achieved.

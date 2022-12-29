@@ -25,8 +25,7 @@ def array_to_points(arr: np.ndarray) -> list[State]:
 def generate_meanings(universe: StateSpace) -> list:
     """Generates all possible subsets of the meaning space."""
     arrs = [
-        np.array(i)
-        for i in itertools.product([0, 1], repeat=len(universe.referents))
+        np.array(i) for i in itertools.product([0, 1], repeat=len(universe.referents))
     ]
     arrs = arrs[1:]  # remove the empty array meaning to prevent div by 0
     meanings = [SignalMeaning(array_to_points(arr), universe) for arr in arrs]
@@ -45,6 +44,7 @@ def generate_expressions(universe: StateSpace) -> list[Signal]:
     ]
     return expressions
 
+
 def lang_to_cond_dist(lang: SignalingLanguage) -> np.ndarray:
     """Get P(a|s) the conditional probability distribution of acts given states, using a language (specifying only states/acts given signals) to initialize altk LiteralSpeakers, LiteralListeners."""
     s = LiteralSpeaker(lang)
@@ -56,6 +56,7 @@ def lang_to_cond_dist(lang: SignalingLanguage) -> np.ndarray:
 ##############################################################################
 # Main driver code
 ##############################################################################
+
 
 @hydra.main(version_base=None, config_path="../conf", config_name="config")
 def main(config):
@@ -96,7 +97,7 @@ def main(config):
         raise Exception(
             "Language size must be greater than or equal to the universe size."
         )
-    
+
     # Step 1: generate a random sample of languages
     print(seed_size)
     result = generate_languages(
@@ -108,7 +109,6 @@ def main(config):
     )
     seed_population = result["languages"]
     id_start = result["id_start"]
-
 
     # Step 2: use optimizer as an exploration / sampling method:
     # estimate FOUR pareto frontiers using the evolutionary algorithm; one for each corner of the 2D space of possible langs
@@ -143,7 +143,6 @@ def main(config):
         lang_size=lang_size,
     )
 
-
     # Explore corners of the possible language space
     results = {k: None for k in directions}
     pool = []
@@ -171,10 +170,14 @@ def main(config):
     pool = list(set(pool))
 
     # Save RD values
-    points = [compute_rate_distortion(prior, lang_to_cond_dist(lang), dist_mat) for lang in pool]
+    points = [
+        compute_rate_distortion(prior, lang_to_cond_dist(lang), dist_mat)
+        for lang in pool
+    ]
     print("num distinct explored points:", len(set(points)))
 
     util.save_points_df(save_fn, util.points_to_df(points))
+
 
 if __name__ == "__main__":
     main()

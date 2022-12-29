@@ -6,35 +6,36 @@ from analysis.rd import compute_rate_distortion
 from altk.effcomm.agent import Speaker, Listener
 from altk.effcomm.tradeoff import interpolate_data
 
+
 def agents_to_point(
     speaker: Speaker,
     listener: Listener,
     prior: np.ndarray,
     dist_mat: np.ndarray,
 ) -> tuple[float]:
-    """Convert the dispositions that parametrized a Speaker (Sender) and Listener (Receiver) to a pair of (rate, distortion) values.
-    """
+    """Convert the dispositions that parametrized a Speaker (Sender) and Listener (Receiver) to a pair of (rate, distortion) values."""
     return compute_rate_distortion(
         p_x=prior,
         p_xhat_x=agents_to_channel(speaker, listener),
         dist_mat=dist_mat,
     )
 
+
 def agents_to_channel(
     speaker: Speaker,
     listener: Listener,
     fill_rows=False,
 ) -> np.ndarray:
-    """Compute P(act|state) using 
+    """Compute P(act|state) using
         p(act|state) = sum_signal [p(act|signal)* p(signal|state)]
-        -> 
+        ->
         P(act|state) = SR
-    
+
     Args:
         speaker: A speaker agent, i.e. Sender or LiteralSpeaker
 
         listener: A listener agent, i.e. Receiver or LiteralListener
-    
+
     Returns:
         p_cond: the 'communication channel' represented by P(act|state).
     """
@@ -45,16 +46,16 @@ def agents_to_channel(
         p_cond = rows_zero_to_uniform(p_cond)
     return p_cond
 
+
 def rows_zero_to_uniform(mat):
-    """Ensure that P(act|state) is a probability distribution, i.e. each row (indexed by a state) is a distribution over acts, sums to exactly 1.0. Necessary when exploring mathematically possible languages which sometimes have that p(signal|state) is a vector of 0s.
-    """
+    """Ensure that P(act|state) is a probability distribution, i.e. each row (indexed by a state) is a distribution over acts, sums to exactly 1.0. Necessary when exploring mathematically possible languages which sometimes have that p(signal|state) is a vector of 0s."""
 
     threshold = 1e-5
 
     for row in mat:
         # less than 1.0
         if row.sum() and 1.0 - row.sum() > threshold:
-            print("row is nonzero and sums to less than 1.0!") 
+            print("row is nonzero and sums to less than 1.0!")
             print(row, row.sum())
             raise Exception
         # greater than 1.0
@@ -63,14 +64,16 @@ def rows_zero_to_uniform(mat):
             print(row, row.sum())
             raise Exception
 
-    return np.array([
-            row if row.sum() 
-            else np.ones(len(row)) / len(row) for row in mat
-        ])
+    return np.array([row if row.sum() else np.ones(len(row)) / len(row) for row in mat])
 
-def interpolate_curve(curve_data: pd.DataFrame, sampled_data: pd.DataFrame = None, max_distortion: float = 0) -> pd.DataFrame:
+
+def interpolate_curve(
+    curve_data: pd.DataFrame,
+    sampled_data: pd.DataFrame = None,
+    max_distortion: float = 0,
+) -> pd.DataFrame:
     """Interpolate curve data so that it bounds all explored languages. Use the maximum of distortion values attained by both BA and exploration.
-    
+
     Args:
         curve_data: a DataFrame of Rate-Distortion curve points from BA algorithm
 
@@ -83,7 +86,7 @@ def interpolate_curve(curve_data: pd.DataFrame, sampled_data: pd.DataFrame = Non
         max_cost = max(sampled_data["distortion"].max(), curve_data["distortion"].max())
     else:
         max_cost = curve_data["distortion"].max()
-    
+
     if max_distortion > max_cost:
         max_cost = max_distortion
 

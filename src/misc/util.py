@@ -38,7 +38,9 @@ def experiment_parameters(config: dict[str, Any]) -> dict[str, Any]:
         "similarity": config.game.similarity.func,
         "sim_param": config.game.similarity.param,
         "explore_directions": config.explore_space.directions,
-        "seed_gen_size": int(float(config.explore_space.pool_size.seed_generation_size)),
+        "seed_gen_size": int(
+            float(config.explore_space.pool_size.seed_generation_size)
+        ),
         "max_mutations": config.explore_space.pool_size.max_mutations,
         "num_generations": config.explore_space.pool_size.num_generations,
         "num_trials": config.simulation.num_trials,
@@ -92,13 +94,14 @@ def save_plot(fn: str, plot: ggplot, width=10, height=10, dpi=300) -> None:
 # Data
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
 def points_to_df(points: list[tuple[float]]) -> pd.DataFrame:
-    """Convert a list of points to a dataframe with rate, distortion as columns.
-    """
+    """Convert a list of points to a dataframe with rate, distortion as columns."""
     return pd.DataFrame(
         data=points,
         columns=["rate", "distortion"],
     )
+
 
 def save_points_df(fn: str, df: pd.DataFrame) -> None:
     """Save a dataframe of (Rate, Distortion) points to a CSV."""

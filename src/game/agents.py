@@ -6,6 +6,7 @@ from altk.language.semantics import Meaning
 from game.languages import State, StateSpace, Signal, SignalMeaning, SignalingLanguage
 from typing import Any
 
+
 class Sender(Speaker):
     """A Sender agent in a signaling game chooses a signal given an observed state of nature, according to P(signal | state)."""
 

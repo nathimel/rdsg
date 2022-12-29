@@ -7,6 +7,7 @@ import plotnine as pn
 from misc import util, vis
 from analysis.measure import interpolate_curve
 
+
 @hydra.main(version_base=None, config_path="../conf", config_name="config")
 def main(config):
     util.set_seed(config.seed)
@@ -14,7 +15,7 @@ def main(config):
     # load datapaths
     cwd = os.getcwd()
     game_dir = cwd.replace(config.filepaths.simulation_subdir, "")
-    curve_fn = os.path.join(game_dir, config.filepaths.curve_points_save_fn)    
+    curve_fn = os.path.join(game_dir, config.filepaths.curve_points_save_fn)
     fps = config.filepaths
     sim_fn = os.path.join(cwd, fps.simulation_points_save_fn)
     sampled_fn = os.path.join(game_dir, config.filepaths.sampled_points_save_fn)
@@ -31,6 +32,7 @@ def main(config):
     # get plot
     plot = vis.basic_tradeoff_plot(curve_data, sim_data, sampled_data)
     util.save_plot(plot_fn, plot)
+
 
 if __name__ == "__main__":
     main()

@@ -11,15 +11,13 @@ def basic_tradeoff_plot(
     """Get a basic plotnine point plot of languages in a complexity vs comm_cost 2D plot."""
     plot = (
         # Set data and the axes
-        pn.ggplot(
-            data=pareto_data, mapping=pn.aes(x="rate", y="distortion")
-        )
+        pn.ggplot(data=pareto_data, mapping=pn.aes(x="rate", y="distortion"))
         + pn.xlab("Rate I(S;A)")
         + pn.ylab("Distortion D[S, A]")
         + pn.scale_color_cmap("cividis")
     )
-    if sampled_data is not None: 
-        plot = plot + pn.geom_point( # hypothetical langs bottom layer
+    if sampled_data is not None:
+        plot = plot + pn.geom_point(  # hypothetical langs bottom layer
             sampled_data,
             color="gray",
             shape="o",
@@ -31,8 +29,8 @@ def basic_tradeoff_plot(
         color="blue",
         shape="o",
         size=4,
-    )        
-    plot = plot + pn.geom_line(size=2) # pareto frontier last
+    )
+    plot = plot + pn.geom_line(size=2)  # pareto frontier last
     return plot
 
 
