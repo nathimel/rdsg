@@ -1,3 +1,4 @@
-- game.similarity.param=6
 - simulation/dynamics=replicator_dynamic
 - simulation.num_trials=10
+- simulation.trajectory=True
+- game.similarity.param=6

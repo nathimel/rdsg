@@ -125,6 +125,7 @@ def mean_trajectory(trials: list[SignalingGame]) -> pd.DataFrame:
     mean_traj = np.mean(points, axis=0)
     points = np.squeeze(mean_traj)
     points_df = points_to_df(points)
+    points_df["round"] = pd.to_numeric(points_df.index)  # continuous scale
     return points_df
 
 def trial_to_trajectory_df(sg: SignalingGame) -> pd.DataFrame:

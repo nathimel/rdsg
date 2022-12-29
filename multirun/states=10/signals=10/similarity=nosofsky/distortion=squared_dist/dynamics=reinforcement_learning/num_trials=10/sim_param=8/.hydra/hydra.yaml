@@ -112,13 +112,15 @@ hydra:
     hydra:
     - hydra.mode=MULTIRUN
     task:
+    - simulation/dynamics=reinforcement_learning
+    - simulation.num_trials=10
+    - simulation.trajectory=True
     - game.similarity.param=8
     - simulation.dynamics.num_rounds=100000.0
-    - simulation.num_trials=10
   job:
     name: run_simulations
     chdir: true
-    override_dirname: simulation.dynamics.num_rounds=100000.0
+    override_dirname: simulation.dynamics.num_rounds=100000.0,simulation.trajectory=True,simulation/dynamics=reinforcement_learning
     id: '4'
     num: 4
     config_name: config

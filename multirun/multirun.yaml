@@ -112,14 +112,15 @@ hydra:
     hydra:
     - hydra.mode=MULTIRUN
     task:
-    - game.similarity.param=4, 10
-    - simulation/dynamics=replicator_dynamic
-    - simulation.num_trials=100
+    - simulation/dynamics=reinforcement_learning
+    - simulation.num_trials=10
     - simulation.trajectory=True
+    - game.similarity.param=range(0, 11, 2)
+    - simulation.dynamics.num_rounds=1e5
   job:
     name: run_simulations
     chdir: true
-    override_dirname: simulation.trajectory=True,simulation/dynamics=replicator_dynamic
+    override_dirname: simulation.dynamics.num_rounds=1e5,simulation.trajectory=True,simulation/dynamics=reinforcement_learning
     id: ???
     num: ???
     config_name: config
@@ -155,7 +156,7 @@ hydra:
     output_dir: ???
     choices:
       simulation: basic
-      simulation/dynamics: replicator_dynamic
+      simulation/dynamics: reinforcement_learning
       explore_space: basic
       explore_space/pool_size: small
       explore_space/directions: all
@@ -192,16 +193,17 @@ explore_space:
     num_generations: 10
 simulation:
   dynamics:
-    name: replicator_dynamic
-    max_its: 200
-    threshold: 1.0e-05
-  num_trials: 100
+    name: reinforcement_learning
+    num_rounds: 100000.0
+    learning_rate: 1.0
+  num_trials: 10
   trajectory: true
 seed: 42
 filepaths:
   curve_points_save_fn: curve_points.csv
   simulation_points_save_fn: simulation_points.csv
   sampled_points_save_fn: sampled_points.csv
+  mean_points_save_fn: mean_points.csv
   counterpart_points_fn: counterpart_points.csv
   tradeoff_plot_fn: tradeoff.png
   game_subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/similarity=${game.similarity.func}/distortion=${game.distortion}

@@ -112,16 +112,16 @@ hydra:
     hydra:
     - hydra.mode=MULTIRUN
     task:
-    - game.similarity.param=10
     - simulation/dynamics=replicator_dynamic
     - simulation.num_trials=100
     - simulation.trajectory=True
+    - game.similarity.param=10
   job:
     name: run_simulations
     chdir: true
     override_dirname: simulation.trajectory=True,simulation/dynamics=replicator_dynamic
-    id: '1'
-    num: 1
+    id: '5'
+    num: 5
     config_name: config
     env_set: {}
     env_copy: []
