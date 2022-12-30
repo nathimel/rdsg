@@ -167,11 +167,12 @@ def nosofsky_normed(
     objects: np.ndarray,
     alpha: float = 0.0,
     speed: float = 1.0,
-    **kwargs,    
+    **kwargs,
 ) -> np.ndarray:
     """The nosofsky similarity function, scaled to [0,1]."""
-    sim_mat = nosofsky(target, objects, alpha, speed = 1.0, **kwargs)
+    sim_mat = nosofsky(target, objects, alpha, speed=1.0, **kwargs)
     return sim_mat / sim_mat.sum() * speed
+
 
 similarity_functions = {
     "exp": exp,
