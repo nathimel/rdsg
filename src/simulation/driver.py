@@ -56,11 +56,19 @@ def game_parameters(
     kwargs["dist_mat"] = perception.generate_dist_matrix(universe, kwargs["distortion"])
 
     # construct utility function
+    funcs = [
+        "nosofsky",
+        "nosofsky_normed",
+        "exp",
+        "exp_normed",
+    ]
     sim_kwargs = {"distortion": kwargs["distortion"]}
-    if similarity == "nosofsky":
+    if "nosofsky" in similarity:
         sim_kwargs["alpha"] = kwargs["sim_param"]
-    elif similarity in ["exp", "exp_normed"]:
+    elif "exp" in similarity:
         sim_kwargs["gamma"] = kwargs["sim_param"]
+    else:
+        raise ValueError(f"Inappropriate similarity function. Acceptable values are {funcs}. Received: {similarity}")
     utility = perception.generate_sim_matrix(universe, similarity, **sim_kwargs)
 
     # parameters for a signaling game

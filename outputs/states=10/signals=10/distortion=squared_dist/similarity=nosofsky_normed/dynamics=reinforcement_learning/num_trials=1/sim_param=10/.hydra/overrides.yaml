@@ -1,0 +1,2 @@
+- game/similarity=nosofsky_normed
+- game.similarity.param=10

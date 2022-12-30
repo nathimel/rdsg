@@ -15,8 +15,8 @@ ARGS=(
     "explore_space/pool_size=large"
     )
 
-echo python src/run_simulations.py -m $"${ARGS[@]}" $"${SWEEP[@]}" 
-python src/run_simulations.py -m $"${ARGS[@]}" $"${SWEEP[@]}" 
+# echo python src/run_simulations.py -m $"${ARGS[@]}" $"${SWEEP[@]}" 
+# python src/run_simulations.py -m $"${ARGS[@]}" $"${SWEEP[@]}" 
 
 # echo python src/explore.py $"${ARGS[@]}"
 # python src/explore.py $"${ARGS[@]}"

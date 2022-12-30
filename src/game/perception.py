@@ -64,7 +64,7 @@ def generate_sim_matrix(universe: StateSpace, similarity: str, **kwargs) -> np.n
 def exp(
     target: int,
     objects: np.ndarray,
-    gamma: float = 1.0,
+    gamma: float,
     distortion: str = "squared_dist",
     speed: float = 1.0,
     **kwargs,
@@ -92,7 +92,7 @@ def exp(
 def exp_normed(
     target: int,
     objects: np.ndarray,
-    gamma: float = 1.0,
+    gamma: float,
     distortion: str = "squared_dist",
     speed: float = 1.0,
     **kwargs,
@@ -121,7 +121,7 @@ def exp_normed(
 def nosofsky(
     target: int,
     objects: np.ndarray,
-    alpha: float = 0.0,
+    alpha: float,
     speed: float = 1.0,
     **kwargs,
 ) -> np.ndarray:
@@ -165,7 +165,7 @@ def nosofsky(
 def nosofsky_normed(
     target: int,
     objects: np.ndarray,
-    alpha: float = 0.0,
+    alpha: float,
     speed: float = 1.0,
     **kwargs,
 ) -> np.ndarray:
