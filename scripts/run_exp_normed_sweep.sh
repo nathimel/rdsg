@@ -21,7 +21,7 @@ ARGS=(
 # echo python src/explore.py $"${ARGS[@]}"
 # python src/explore.py $"${ARGS[@]}"
 
-echo python src/curve.py $"${ARGS[@]}"
-python src/curve.py $"${ARGS[@]}"
+# echo python src/curve.py $"${ARGS[@]}"
+# python src/curve.py $"${ARGS[@]}"
 
 # no plot, need to use notebook

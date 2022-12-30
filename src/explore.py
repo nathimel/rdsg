@@ -144,6 +144,7 @@ def main(config):
     )
 
     # Explore corners of the possible language space
+    # TODO: use multiprocessing
     results = {k: None for k in directions}
     pool = []
     for direction in directions:

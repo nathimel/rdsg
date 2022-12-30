@@ -32,23 +32,30 @@ def experiment_parameters(config: dict[str, Any]) -> dict[str, Any]:
     """
 
     kwargs = {
+        # Game
         "num_states": config.game.size.num_states,
-        "num_signals": config.game.size.num_signals,
+        "num_signals": config.game.size.num_signals,        
         "distortion": config.game.distortion,
         "similarity": config.game.similarity.func,
-        "sim_param": config.game.similarity.param,
+        "sim_param": config.game.similarity.param,        
+        # Explore
         "explore_directions": config.explore_space.directions,
         "seed_gen_size": int(
             float(config.explore_space.pool_size.seed_generation_size)
         ),
         "max_mutations": config.explore_space.pool_size.max_mutations,
         "num_generations": config.explore_space.pool_size.num_generations,
+        # Simulation
         "num_trials": config.simulation.num_trials,
         "trajectory": config.simulation.trajectory,
         "dynamics": config.simulation.dynamics.name,
         "speed": config.simulation.dynamics.speed,
+        # Multiprocessing
+        "multiprocessing": config.multiprocessing,
+        "num_processes": config.num_processes,
     }
 
+    # Dynamics
     if kwargs["dynamics"] == "reinforcement_learning":
         kwargs["num_rounds"] = int(float(config.simulation.dynamics.num_rounds))
 

@@ -93,16 +93,28 @@ def run_trials(
     **kwargs,
 ) -> list[SignalingGame]:
     """Run a simulation for multiple trials."""
-    # use multiprocessing
-    with Pool(cpu_count()) as p:
+    if kwargs["multiprocessing"] == True:
+        return run_trials_multiprocessing(*args, **kwargs)
+    else:
+        return [run_simulation(*args, **kwargs) for _ in tqdm(range(kwargs["num_trials"]))]
+
+def run_trials_multiprocessing(
+    *args,
+    **kwargs,
+) -> list[SignalingGame]:
+    """Use multiprocessing apply_async to run multiple trials at once."""
+    num_processes = cpu_count()
+    if kwargs["num_processes"] is not None:
+        num_processes = kwargs["num_processes"]
+
+    with Pool(num_processes) as p:
         async_results = [
             p.apply_async(run_simulation, args=args, kwds=kwargs)
-            for _ in tqdm(range(kwargs["num_trials"]))
+            for _ in range(kwargs["num_trials"])
         ]
         p.close()
         p.join()
-    return [async_result.get() for async_result in async_results]
-
+    return [async_result.get() for async_result in tqdm(async_results)]
 
 def run_simulation(
     *args,

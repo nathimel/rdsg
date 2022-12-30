@@ -24,6 +24,8 @@ simulation:
   num_trials: 100
   trajectory: false
 seed: 42
+multiprocessing: true
+num_processes: null
 filepaths:
   curve_points_save_fn: curve_points.csv
   simulation_points_save_fn: simulation_points.csv
