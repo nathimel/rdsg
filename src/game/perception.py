@@ -66,6 +66,7 @@ def exp(
     objects: np.ndarray,
     gamma: float = 1.0,
     distortion: str = "squared_dist",
+    speed: float = 1.0,
     **kwargs,
 ) -> np.ndarray:
     """The (unnormalied) exponential function sim(x,y) = exp(-gamma * d(x,y)).
@@ -79,11 +80,13 @@ def exp(
 
         distortion: a string corresponding to the name of a pairwise distortion function on states, one of {'abs_dist', 'squared_dist'}
 
+        speed: a positive float to scale utility by, serving as learning rate in learning and speed of evolution in replicator dynamics.
+
     Returns:
         a similarity matrix representing pairwise inverse distance between states
     """
     exp_term = lambda t, u: -gamma * distortion_measures[distortion](t, u)
-    return np.exp(np.array([exp_term(target, u) for u in objects]))
+    return np.exp(np.array([exp_term(target, u) for u in objects])) * speed
 
 
 def exp_normed(
@@ -91,6 +94,7 @@ def exp_normed(
     objects: np.ndarray,
     gamma: float = 1.0,
     distortion: str = "squared_dist",
+    speed: float = 1.0,
     **kwargs,
 ) -> np.ndarray:
     """The (normalized) exponential function, aka softmax, sim(x,y) = exp(-gamma * d(x,y)) / Z.
@@ -104,17 +108,21 @@ def exp_normed(
 
         distortion: {`abs_dist`, `squared_dist`} the distance measure to use.
 
+        speed: a positive float to scale utility by, serving as learning rate in learning and speed of evolution in replicator dynamics.
+
+
     Returns:
         a similarity matrix representing pairwise inverse distance between states
     """
     exp_arr = exp(target, objects, gamma, distortion)
-    return exp_arr / exp_arr.sum()
+    return exp_arr / exp_arr.sum() * speed
 
 
 def nosofsky(
     target: int,
     objects: np.ndarray,
     alpha: float = 0.0,
+    speed: float = 1.0,
     **kwargs,
 ) -> np.ndarray:
     """The (Gaussian) perceptual similarity function given by Nosofsky 1986:
@@ -128,6 +136,16 @@ def nosofsky(
         }
 
     where alpha is an imprecision parameter. When alpha = 0, agents perfectly discriminate between states; when alpha -> infty, agents cannot discriminate states at all. (Compare to gamma in exp and sofmax, which is s.t. perfect discrimination at infty, and homogeneity at 0.)
+
+
+    Args:
+        target: value of state
+
+        objects: set of points with measurable similarity values
+
+        alpha: perceptual imprecision parameter
+
+        speed: a positive float to scale utility by, serving as learning rate in learning and speed of evolution in replicator dynamics.
     """
     if alpha < 0:
         raise ValueError(
@@ -141,13 +159,25 @@ def nosofsky(
             -distortion_measures["squared_dist"](target, u) / (alpha**2)
         )
 
-    return np.array([sim_point(u) for u in objects])
+    return np.array([sim_point(u) for u in objects]) * speed
 
+
+def nosofsky_normed(
+    target: int,
+    objects: np.ndarray,
+    alpha: float = 0.0,
+    speed: float = 1.0,
+    **kwargs,    
+) -> np.ndarray:
+    """The nosofsky similarity function, scaled to [0,1]."""
+    sim_mat = nosofsky(target, objects, alpha, speed = 1.0, **kwargs)
+    return sim_mat / sim_mat.sum() * speed
 
 similarity_functions = {
     "exp": exp,
     "exp_normed": exp_normed,
     "nosofsky": nosofsky,
+    "nosofsky_normed": nosofsky_normed,
 }
 
 

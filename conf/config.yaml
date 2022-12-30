@@ -15,8 +15,8 @@ filepaths:
   counterpart_points_fn: counterpart_points.csv
   tradeoff_plot_fn: tradeoff.png
   # hydra automatic folder naming
-  game_subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/similarity=${game.similarity.func}/distortion=${game.distortion}
-  simulation_subdir: dynamics=${simulation.dynamics.name}/num_trials=${simulation.num_trials}/sim_param=${game.similarity.param}
+  game_subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/distortion=${game.distortion}
+  simulation_subdir: similarity=${game.similarity.func}/dynamics=${simulation.dynamics.name}/num_trials=${simulation.num_trials}/sim_param=${game.similarity.param}
   leaf_subdir: ${filepaths.game_subdir}/${filepaths.simulation_subdir}
 
 hydra:
@@ -31,10 +31,11 @@ hydra:
           - game.size.num_states
           - game.size.num_signals
           - game.similarity.func
-          - game.similarity.param          
+          - game.similarity.param
           - game.distortion
           - simulation.dynamics.name
           - simulation.num_trials
+          - simulation.dynamics.rate
   sweep:
     dir: multirun
     subdir: ${filepaths.leaf_subdir}

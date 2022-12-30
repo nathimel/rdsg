@@ -46,11 +46,11 @@ def experiment_parameters(config: dict[str, Any]) -> dict[str, Any]:
         "num_trials": config.simulation.num_trials,
         "trajectory": config.simulation.trajectory,
         "dynamics": config.simulation.dynamics.name,
+        "speed": config.simulation.dynamics.speed,
     }
 
     if kwargs["dynamics"] == "reinforcement_learning":
         kwargs["num_rounds"] = int(float(config.simulation.dynamics.num_rounds))
-        kwargs["learning_rate"] = config.simulation.dynamics.learning_rate
 
     if kwargs["dynamics"] == "replicator_dynamic":
         kwargs["max_its"] = config.simulation.dynamics.max_its

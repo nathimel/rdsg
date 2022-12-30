@@ -59,7 +59,7 @@ def main(config):
         df["alpha"] = alphas
 
     else:  # exp or exp normed
-        betas = [0, 0.1, 0.2, 0.5, 0.75, 1, 2, 3, 5, 1000]
+        betas = [0.1, 0.2, 0.5, 0.6, 0.75, 1, 2, 3, 5, 1000]
         betas = np.array(betas).astype(float)
         df = util.points_to_df(ba(betas))
         df["beta"] = betas

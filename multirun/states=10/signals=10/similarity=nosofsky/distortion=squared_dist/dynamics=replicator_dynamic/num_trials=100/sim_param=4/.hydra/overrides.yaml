@@ -1,4 +1,0 @@
-- simulation/dynamics=replicator_dynamic
-- simulation.num_trials=100
-- simulation.trajectory=True
-- game.similarity.param=4
