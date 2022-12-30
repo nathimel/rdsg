@@ -1,7 +1,6 @@
 """Main driver script for running an experiment."""
 
 import hydra
-import numpy as np
 from misc import util
 from simulation.driver import run_trials, trials_to_df, mean_trajectory
 

@@ -104,25 +104,23 @@ hydra:
       - file
     disable_existing_loggers: false
   env: {}
-  mode: MULTIRUN
+  mode: RUN
   searchpath: []
   callbacks: {}
   output_subdir: .hydra
   overrides:
     hydra:
-    - hydra.mode=MULTIRUN
+    - hydra.mode=RUN
     task:
     - game/similarity=exp
     - game.distortion=abs_dist
     - simulation.num_trials=1000
+    - simulation.dynamics.num_rounds=1e6
     - explore_space/pool_size=large
-    - game.similarity.param=0.1, 0.2, 0.5, 0.6, 0.75, 1, 2, 3, 5, 1000
-    - simulation/dynamics=reinforcement_learning, replicator_dynamic
   job:
-    name: run_simulations
+    name: explore
     chdir: true
-    override_dirname: explore_space/pool_size=large,game/similarity=exp,simulation/dynamics=reinforcement_learning,
-      replicator_dynamic
+    override_dirname: explore_space/pool_size=large,game/similarity=exp,simulation.dynamics.num_rounds=1e6
     id: ???
     num: ???
     config_name: config
@@ -155,7 +153,7 @@ hydra:
     - path: ''
       schema: structured
       provider: schema
-    output_dir: ???
+    output_dir: /Users/nathanielimel/lps/projects/rdsg/outputs/states=10/signals=10/similarity=exp/distortion=abs_dist/dynamics=reinforcement_learning/num_trials=1000/sim_param=1000
     choices:
       simulation: basic
       simulation/dynamics: reinforcement_learning
@@ -175,39 +173,3 @@ hydra:
       hydra/launcher: basic
       hydra/output: default
   verbose: false
-game:
-  similarity:
-    func: exp
-    param: 1000
-  size:
-    num_states: 10
-    num_signals: 10
-  distortion: abs_dist
-explore_space:
-  directions:
-    lower_left: true
-    lower_right: true
-    upper_left: true
-    upper right: true
-  pool_size:
-    seed_generation_size: 1000.0
-    max_mutations: 5
-    num_generations: 200
-simulation:
-  dynamics:
-    name: reinforcement_learning
-    num_rounds: 1000000.0
-    learning_rate: 1.0
-  num_trials: 1000
-  trajectory: false
-seed: 42
-filepaths:
-  curve_points_save_fn: curve_points.csv
-  simulation_points_save_fn: simulation_points.csv
-  sampled_points_save_fn: sampled_points.csv
-  mean_points_save_fn: mean_points.csv
-  counterpart_points_fn: counterpart_points.csv
-  tradeoff_plot_fn: tradeoff.png
-  game_subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/similarity=${game.similarity.func}/distortion=${game.distortion}
-  simulation_subdir: dynamics=${simulation.dynamics.name}/num_trials=${simulation.num_trials}/sim_param=${game.similarity.param}
-  leaf_subdir: ${filepaths.game_subdir}/${filepaths.simulation_subdir}
