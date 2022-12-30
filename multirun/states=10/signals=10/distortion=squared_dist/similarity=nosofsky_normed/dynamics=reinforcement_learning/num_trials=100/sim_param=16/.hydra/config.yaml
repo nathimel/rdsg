@@ -1,7 +1,7 @@
 game:
   similarity:
     func: nosofsky_normed
-    param: 0
+    param: 16
   size:
     num_states: 10
     num_signals: 10
@@ -29,7 +29,6 @@ num_processes: null
 filepaths:
   curve_points_save_fn: curve_points.csv
   simulation_points_save_fn: simulation_points.csv
-  trajectory_points_save_fn: trajectory_points.csv
   sampled_points_save_fn: sampled_points.csv
   mean_points_save_fn: mean_points.csv
   counterpart_points_fn: counterpart_points.csv

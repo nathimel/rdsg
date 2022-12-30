@@ -50,7 +50,8 @@ def main(config):
     # TODO: use hydra to infer the list of swept alpha values to obtain beta-counterparts, which depends on similarity, distortion
 
     if "nosofsky" in kwargs["similarity"]:
-        alphas = np.array(range(0, 11, 2)).astype(float)
+        # alphas = np.array(range(0, 11, 2)).astype(float)
+        alphas = np.array([0, 1, 2, 4, 8, 16,]).astype(float)
         betas = alphas**-2
         # 0 ** -2 \to \infty, just use 1000
         betas[0] = 1000

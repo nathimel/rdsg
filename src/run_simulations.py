@@ -13,13 +13,18 @@ def main(config):
     kwargs = util.experiment_parameters(config)
     trials = run_trials(**kwargs)
 
-    # # collect and save measurements
+    # collect and save measurements
     df = trials_to_df(trials, kwargs["trajectory"])
-    util.save_points_df(fn=config.filepaths.simulation_points_save_fn, df=df)
+    fn = config.filepaths.simulation_points_save_fn
 
     if kwargs["trajectory"]:
+        # save means
         df = mean_trajectory(trials)
         util.save_points_df(fn=config.filepaths.mean_points_save_fn, df=df)
+        # don't overwrite non-trajectory files
+        fn = config.filepaths.trajectory_points_save_fn
+
+    util.save_points_df(fn=fn, df=df)
 
 
 if __name__ == "__main__":

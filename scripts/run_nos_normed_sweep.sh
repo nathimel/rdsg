@@ -4,7 +4,8 @@
 
 
 SWEEP=(
-    "game.similarity.param=0, 2, 4, 6, 8, 10"
+    # "game.similarity.param=0, 2, 4, 6, 8, 10"
+    "game.similarity.param=16"
     "simulation/dynamics=reinforcement_learning, replicator_dynamic"
     )
 
@@ -18,8 +19,8 @@ ARGS=(
 # echo python src/run_simulations.py -m $"${ARGS[@]}" $"${SWEEP[@]}" 
 # python src/run_simulations.py -m $"${ARGS[@]}" $"${SWEEP[@]}" 
 
-echo python src/explore.py $"${ARGS[@]}"
-python src/explore.py $"${ARGS[@]}"
+# echo python src/explore.py $"${ARGS[@]}"
+# python src/explore.py $"${ARGS[@]}"
 
 echo python src/curve.py $"${ARGS[@]}"
 python src/curve.py $"${ARGS[@]}"
