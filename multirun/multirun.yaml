@@ -116,13 +116,12 @@ hydra:
     - game.distortion=squared_dist
     - simulation.num_trials=100
     - explore_space/pool_size=large
-    - game.similarity.param=16
-    - simulation/dynamics=reinforcement_learning, replicator_dynamic
+    - simulation.trajectory=True
+    - game.similarity.param=0, 1, 2, 4, 6, 8, 16
   job:
     name: run_simulations
     chdir: true
-    override_dirname: explore_space/pool_size=large,game/similarity=nosofsky_normed,simulation/dynamics=reinforcement_learning,
-      replicator_dynamic
+    override_dirname: explore_space/pool_size=large,game/similarity=nosofsky_normed,simulation.trajectory=True
     id: ???
     num: ???
     config_name: config
@@ -179,7 +178,7 @@ hydra:
 game:
   similarity:
     func: nosofsky_normed
-    param: 16
+    param: 0
   size:
     num_states: 10
     num_signals: 10
@@ -200,13 +199,14 @@ simulation:
     num_rounds: 100000.0
     speed: 1.0
   num_trials: 100
-  trajectory: false
+  trajectory: true
 seed: 42
 multiprocessing: true
 num_processes: null
 filepaths:
   curve_points_save_fn: curve_points.csv
   simulation_points_save_fn: simulation_points.csv
+  trajectory_points_save_fn: trajectory_points.csv
   sampled_points_save_fn: sampled_points.csv
   mean_points_save_fn: mean_points.csv
   counterpart_points_fn: counterpart_points.csv

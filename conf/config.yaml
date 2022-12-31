@@ -12,7 +12,6 @@ filepaths:
   # experiment outputs
   curve_points_save_fn: curve_points.csv
   simulation_points_save_fn: simulation_points.csv
-  trajectory_points_save_fn: trajectory_points.csv
   sampled_points_save_fn: sampled_points.csv
   mean_points_save_fn: mean_points.csv # averages across multiple trials
   counterpart_points_fn: counterpart_points.csv

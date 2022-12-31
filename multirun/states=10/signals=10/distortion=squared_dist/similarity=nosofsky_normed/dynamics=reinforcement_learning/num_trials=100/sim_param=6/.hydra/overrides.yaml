@@ -2,5 +2,5 @@
 - game.distortion=squared_dist
 - simulation.num_trials=100
 - explore_space/pool_size=large
+- simulation.trajectory=True
 - game.similarity.param=6
-- simulation/dynamics=reinforcement_learning

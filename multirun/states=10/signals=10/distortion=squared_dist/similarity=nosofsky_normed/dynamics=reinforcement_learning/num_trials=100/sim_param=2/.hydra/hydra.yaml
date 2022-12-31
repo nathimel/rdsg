@@ -116,12 +116,12 @@ hydra:
     - game.distortion=squared_dist
     - simulation.num_trials=100
     - explore_space/pool_size=large
+    - simulation.trajectory=True
     - game.similarity.param=2
-    - simulation/dynamics=reinforcement_learning
   job:
     name: run_simulations
     chdir: true
-    override_dirname: explore_space/pool_size=large,game/similarity=nosofsky_normed,simulation/dynamics=reinforcement_learning
+    override_dirname: explore_space/pool_size=large,game/similarity=nosofsky_normed,simulation.trajectory=True
     id: '2'
     num: 2
     config_name: config
