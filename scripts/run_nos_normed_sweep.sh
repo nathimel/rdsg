@@ -5,7 +5,7 @@
 
 SWEEP=(
     "game.similarity.param=0, 1, 2, 4, 6, 8, 16"
-    # "simulation/dynamics=reinforcement_learning, replicator_dynamic"
+    "simulation/dynamics=reinforcement_learning, replicator_dynamic"
     )
 
 ARGS=(
@@ -13,7 +13,7 @@ ARGS=(
     "game.distortion=squared_dist" 
     "simulation.num_trials=100"
     "explore_space/pool_size=large"
-    "simulation.trajectory=True"
+    # "simulation.trajectory=True"
     )
 
 echo python src/run_simulations.py -m $"${ARGS[@]}" $"${SWEEP[@]}" 
