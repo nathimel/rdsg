@@ -9,9 +9,10 @@ SWEEP=(
     )
 
 ARGS=(
-    "game/similarity=nosofsky" 
-    "game.distortion=squared_dist" 
+    "game/similarity=nosofsky"
+    "game.distortion=squared_dist"
     "simulation.num_trials=100"
+    "simulation.dynamics.learning_rate=0.05"
     "explore_space/pool_size=large"
     )
 

@@ -47,6 +47,7 @@ class RothErevReinforcementLearning(Dynamics):
     def __init__(self, game: SignalingGame, **kwargs) -> None:
         super().__init__(game, **kwargs)
         self.num_rounds = kwargs["num_rounds"]
+        self.learning_rate = kwargs["learning_rate"]
 
     def run(self):
         """Simulate reinforcement learning of the pair of agents by playing the signaling game and reinforcing actions depending on their success (utiltity)."""
@@ -73,7 +74,7 @@ class RothErevReinforcementLearning(Dynamics):
             # record interaction
             signal = sender.encode(target)
             output = receiver.decode(signal)
-            amount = utility(target, output)
+            amount = utility(target, output) * self.learning_rate
 
             # update agents
             reward(
