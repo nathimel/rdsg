@@ -53,15 +53,15 @@ This will perform four basic steps by running the following scripts:
 
     Estimate the Pareto frontier for sim-max languages balancing simplicity/informativeness trade-off, which is a Rate-Distortion curve computed by the Blahut-Arimoto algorithm.
 
-    `python3 src/explore.py`
-
 3. Explore the trade-off space
+
+    `python3 src/explore.py`
 
     Use a geneteic algororithm to explore the space of possible sim-max languages.
 
-    `python3 src/plot.py`
-
 4. Get a basic plot
+
+    `python3 src/plot.py`
 
     Produce a basic plot of the emergent and explored systems compared to the Pareto frontier of optimal solutions.
     

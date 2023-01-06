@@ -1,3 +1,7 @@
 name: reinforcement_learning
 num_rounds: 1e5
 learning_rate: 1.0
+
+# want every parameter sweep over param values
+# and name outputs accordingly
+# but I don't want the sweep for replicator dynamics

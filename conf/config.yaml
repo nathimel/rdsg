@@ -12,13 +12,14 @@ filepaths:
   # experiment outputs
   curve_points_save_fn: curve_points.csv
   simulation_points_save_fn: simulation_points.csv
+  variant_points_save_fn: variants_points.csv
   sampled_points_save_fn: sampled_points.csv
   mean_points_save_fn: mean_points.csv # averages across multiple trials
   counterpart_points_fn: counterpart_points.csv
   tradeoff_plot_fn: tradeoff.png
   # hydra automatic folder naming
   game_subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/distortion=${game.distortion}
-  simulation_subdir: similarity=${game.similarity.func}/dynamics=${simulation.dynamics.name}/learning_rate=${simulation.dynamics.learning_rate}/num_trials=${simulation.num_trials}/sim_param=${game.similarity.param}
+  simulation_subdir: similarity=${game.similarity.func}/dynamics=${simulation.dynamics.name}/num_trials=${simulation.num_trials}/sim_param=${game.similarity.param}
   leaf_subdir: ${filepaths.game_subdir}/${filepaths.simulation_subdir}
 
 hydra:
@@ -36,9 +37,8 @@ hydra:
           - game.similarity.param
           - game.distortion
           - simulation.dynamics.name
-          - simulation.dynamics.learning_rate
           - simulation.num_trials
-          - simulation.dynamics.rate
+          - simulation.dynamics.learning_rate
   sweep:
     dir: multirun
     subdir: ${filepaths.leaf_subdir}

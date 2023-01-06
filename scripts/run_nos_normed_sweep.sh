@@ -13,7 +13,7 @@ ARGS=(
     "game.distortion=squared_dist" 
     "simulation.num_trials=100"
     "explore_space/pool_size=large"
-    # "simulation.trajectory=True"
+    "simulation.trajectory=True"
     )
 
 echo python src/run_simulations.py -m $"${ARGS[@]}" $"${SWEEP[@]}" 

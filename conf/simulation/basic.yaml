@@ -3,3 +3,4 @@ defaults:
 
 num_trials: 1
 trajectory: False
+num_variants: 100 # 0 to skip generation of hypothetical variants

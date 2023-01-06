@@ -5,15 +5,16 @@ import pandas as pd
 from tqdm import tqdm
 from typing import Type, Any
 
-from game.agents import Sender, Receiver
+from game.agents import Sender, Receiver, BayesianReceiver
 from game.languages import State, Signal, StateSpace, SignalMeaning, SignalingLanguage
 from game.signaling_game import SignalingGame
 from game import perception
 from misc.util import points_to_df
 from simulation.dynamics import dynamics_map
+from analysis.measure import agents_to_point
+from analysis.rd import compute_rate_distortion
 
 from multiprocessing import Pool, cpu_count
-from functools import partial
 
 
 def game_parameters(
@@ -68,7 +69,9 @@ def game_parameters(
     elif "exp" in similarity:
         sim_kwargs["gamma"] = kwargs["sim_param"]
     else:
-        raise ValueError(f"Inappropriate similarity function. Acceptable values are {funcs}. Received: {similarity}")
+        raise ValueError(
+            f"Inappropriate similarity function. Acceptable values are {funcs}. Received: {similarity}"
+        )
     utility = perception.generate_sim_matrix(universe, similarity, **sim_kwargs)
 
     # parameters for a signaling game
@@ -96,7 +99,10 @@ def run_trials(
     if kwargs["multiprocessing"] == True:
         return run_trials_multiprocessing(*args, **kwargs)
     else:
-        return [run_simulation(*args, **kwargs) for _ in tqdm(range(kwargs["num_trials"]))]
+        return [
+            run_simulation(*args, **kwargs) for _ in tqdm(range(kwargs["num_trials"]))
+        ]
+
 
 def run_trials_multiprocessing(
     *args,
@@ -115,6 +121,7 @@ def run_trials_multiprocessing(
         p.close()
         p.join()
     return [async_result.get() for async_result in tqdm(async_results)]
+
 
 def run_simulation(
     *args,
@@ -194,3 +201,31 @@ def games_to_languages(games: list[SignalingGame]) -> list[tuple[SignalingLangua
         (agent.to_language() for agent in [g.sender, g.receiver]) for g in games
     ]
     return languages
+
+def get_hypothetical_variants(games: list[SignalingGame], num: int) -> pd.DataFrame:
+    """For each emergent system from a SignalingGame, generate `num` hypothetical variants by permuting the signals that the system assigns to states."""
+    variants_per_system = int(num / len(games))
+
+    points = []
+    for game in games:
+        sender = game.sender
+        seen = set()
+        while len(seen) < variants_per_system:
+            # permute columns of speaker weights
+            permuted = np.random.permutation(sender.weights.T).T
+            seen.add(tuple(permuted.flatten()))
+
+        variant_points = [
+            agents_to_point(
+                speaker=Sender(
+                    language=game.sender.language, 
+                    weights=np.reshape(permuted_weights, (game.sender.shape))),
+                listener=BayesianReceiver(sender, game.prior),
+                prior=game.prior,
+                dist_mat=game.dist_mat,
+            )
+            for permuted_weights in seen
+        ]
+        points.extend(variant_points)
+    
+    return points_to_df(points)

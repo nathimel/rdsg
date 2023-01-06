@@ -34,10 +34,10 @@ def experiment_parameters(config: dict[str, Any]) -> dict[str, Any]:
     kwargs = {
         # Game
         "num_states": config.game.size.num_states,
-        "num_signals": config.game.size.num_signals,        
+        "num_signals": config.game.size.num_signals,
         "distortion": config.game.distortion,
         "similarity": config.game.similarity.func,
-        "sim_param": config.game.similarity.param,        
+        "sim_param": config.game.similarity.param,
         # Explore
         "explore_directions": config.explore_space.directions,
         "seed_gen_size": int(
@@ -47,6 +47,7 @@ def experiment_parameters(config: dict[str, Any]) -> dict[str, Any]:
         "num_generations": config.explore_space.pool_size.num_generations,
         # Simulation
         "num_trials": config.simulation.num_trials,
+        "num_variants": config.simulation.num_variants,
         "trajectory": config.simulation.trajectory,
         "dynamics": config.simulation.dynamics.name,
         # Multiprocessing
