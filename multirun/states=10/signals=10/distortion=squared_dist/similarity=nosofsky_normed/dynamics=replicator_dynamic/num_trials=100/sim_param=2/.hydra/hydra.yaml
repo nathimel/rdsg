@@ -115,15 +115,15 @@ hydra:
     - game/similarity=nosofsky_normed
     - game.distortion=squared_dist
     - simulation.num_trials=100
-    - explore_space/pool_size=large
+    - simulation.num_variants=1000
     - game.similarity.param=2
     - simulation/dynamics=replicator_dynamic
   job:
     name: run_simulations
     chdir: true
-    override_dirname: explore_space/pool_size=large,game/similarity=nosofsky_normed,simulation/dynamics=replicator_dynamic
-    id: '2'
-    num: 2
+    override_dirname: game/similarity=nosofsky_normed,simulation.num_variants=1000,simulation/dynamics=replicator_dynamic
+    id: '5'
+    num: 5
     config_name: config
     env_set: {}
     env_copy: []
@@ -140,7 +140,7 @@ hydra:
         - game.distortion
         - simulation.dynamics.name
         - simulation.num_trials
-        - simulation.dynamics.rate
+        - simulation.dynamics.learning_rate
   runtime:
     version: 1.3.1
     version_base: '1.3'
@@ -160,7 +160,7 @@ hydra:
       simulation: basic
       simulation/dynamics: replicator_dynamic
       explore_space: basic
-      explore_space/pool_size: large
+      explore_space/pool_size: small
       explore_space/directions: all
       game: basic
       game/size: ten

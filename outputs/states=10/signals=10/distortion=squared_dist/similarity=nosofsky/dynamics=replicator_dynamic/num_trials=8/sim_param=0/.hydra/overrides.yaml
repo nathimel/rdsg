@@ -1,0 +1,3 @@
+- simulation.num_trials=8
+- simulation/dynamics=replicator_dynamic
+- simulation.num_variants=200

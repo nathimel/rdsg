@@ -115,13 +115,14 @@ hydra:
     - game/similarity=nosofsky_normed
     - game.distortion=squared_dist
     - simulation.num_trials=100
-    - explore_space/pool_size=large
+    - simulation.num_variants=1000
     - game.similarity.param=0, 1, 2, 4, 6, 8, 16
-    - simulation/dynamics=replicator_dynamic
+    - simulation/dynamics=reinforcement_learning, replicator_dynamic
   job:
     name: run_simulations
     chdir: true
-    override_dirname: explore_space/pool_size=large,game/similarity=nosofsky_normed,simulation/dynamics=replicator_dynamic
+    override_dirname: game/similarity=nosofsky_normed,simulation.num_variants=1000,simulation/dynamics=reinforcement_learning,
+      replicator_dynamic
     id: ???
     num: ???
     config_name: config
@@ -140,7 +141,7 @@ hydra:
         - game.distortion
         - simulation.dynamics.name
         - simulation.num_trials
-        - simulation.dynamics.rate
+        - simulation.dynamics.learning_rate
   runtime:
     version: 1.3.1
     version_base: '1.3'
@@ -158,9 +159,9 @@ hydra:
     output_dir: ???
     choices:
       simulation: basic
-      simulation/dynamics: replicator_dynamic
+      simulation/dynamics: reinforcement_learning
       explore_space: basic
-      explore_space/pool_size: large
+      explore_space/pool_size: small
       explore_space/directions: all
       game: basic
       game/size: ten
@@ -190,23 +191,24 @@ explore_space:
     upper_left: true
     upper right: true
   pool_size:
-    seed_generation_size: 1000.0
-    max_mutations: 5
-    num_generations: 200
+    seed_generation_size: 10
+    max_mutations: 3
+    num_generations: 10
 simulation:
   dynamics:
-    name: replicator_dynamic
-    max_its: 200
-    threshold: 1.0e-05
-    speed: 1.0
+    name: reinforcement_learning
+    num_rounds: 100000.0
+    learning_rate: 1.0
   num_trials: 100
   trajectory: false
+  num_variants: 1000
 seed: 42
 multiprocessing: true
 num_processes: null
 filepaths:
   curve_points_save_fn: curve_points.csv
   simulation_points_save_fn: simulation_points.csv
+  variant_points_save_fn: variants_points.csv
   sampled_points_save_fn: sampled_points.csv
   mean_points_save_fn: mean_points.csv
   counterpart_points_fn: counterpart_points.csv
