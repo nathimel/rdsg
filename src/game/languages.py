@@ -127,6 +127,3 @@ class SignalingLanguage(Language):
             },
         }
         return data
-
-
-# For generating hypothetical systems
