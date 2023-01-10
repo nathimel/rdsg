@@ -30,7 +30,7 @@ num_processes: null
 filepaths:
   curve_points_save_fn: curve_points.csv
   simulation_points_save_fn: simulation_points.csv
-  variants_points_save_fn: variants_points.csv
+  variant_points_save_fn: variant_points.csv
   sampled_points_save_fn: sampled_points.csv
   mean_points_save_fn: mean_points.csv
   counterpart_points_fn: counterpart_points.csv

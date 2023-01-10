@@ -4,25 +4,6 @@ import pandas as pd
 from analysis import tools
 
 # Experiment utils
-def get_curve_points(
-    prior: np.ndarray,
-    dist_mat: np.ndarray,
-    betas: np.ndarray = np.linspace(start=0, stop=2**7, num=1500),
-    unique=False,
-) -> list[tuple[float]]:
-    """Convert the Rate Distortion theoretical limit to a list of points."""
-    rd = lambda beta: blahut_arimoto(dist_mat, p_x=prior, beta=beta)
-    pareto_points = [rd(beta) for beta in betas]
-
-    # remove non-smoothness
-    if unique:
-        pareto_df = pd.DataFrame(data=pareto_points, columns=["rate", "distortion"])
-        pareto_df = pareto_df.drop_duplicates(subset=["rate"])
-        pareto_points = list(pareto_df.itertuples(index=False, name=None))
-
-    return pareto_points
-
-
 def information_rate(p_x: np.ndarray, p_xhat_x: np.ndarray) -> float:
     """I(X;Xhat)"""
     p_xhatx = tools.joint(pY_X=p_xhat_x, pX=p_x)
@@ -67,6 +48,8 @@ def blahut_arimoto(
     beta: float,
     max_it: int = 200,
     eps: float = 1e-5,
+    ignore_converge: bool = False,
+    trajectory: bool = False,
 ) -> tuple[float]:
     """Compute the rate-distortion function of an i.i.d distribution
 
@@ -80,12 +63,18 @@ def blahut_arimoto(
 
         max_it: (int) max number of iterations
 
-        eps: (float) accuracy required by the algorithm: the algorithm stops if there
-                is no change in distoriton value of more than 'eps' between consequtive iterations
+        eps: (float) accuracy required by the algorithm: the algorithm stops if there is no change in distoriton value of more than 'eps' between consequtive iterations
+
+        ignore_converge: (bool) whether to run the optimization until `max_it`, ignoring the stopping criterion specified by `eps`.
+
+        trajectory: (bool) whether to save the optimization trajectory points.
+
     Returns:
-        a tuple containing
-        rate: rate (in bits) of compressing X into X_hat
-        distortion: total distortion between X, X_hat
+        a dict containing
+
+            'final': a tuple of (rate, distortion) values. This is the rate (in bits) of compressing X into X_hat, and distortion between X, X_hat
+
+            'trajectory': a list of the (rate, distortion) points discovered during optimization
     """
     # start with iid conditional distribution, as p(x) may not be uniform
     p_xhat_x = np.tile(p_x, (dist_mat.shape[1], 1)).T
@@ -95,9 +84,10 @@ def blahut_arimoto(
     p_xhat_x /= np.sum(p_xhat_x, 1, keepdims=True)
 
     it = 0
-    distortion_prev = 0
+    traj = []
     distortion = 2 * eps
-    while it < max_it and np.abs(distortion - distortion_prev) > eps:
+    converged = False
+    while not converged:
         it += 1
         distortion_prev = distortion
 
@@ -111,4 +101,17 @@ def blahut_arimoto(
         # update for convergence check
         rate, distortion = compute_rate_distortion(p_x, p_xhat_x, dist_mat)
 
-    return rate, distortion
+        # collect point
+        if trajectory:
+            traj.append((rate, distortion))
+
+        # convergence check
+        if ignore_converge:
+            converged = it == max_it
+        else:
+            converged = it == max_it or np.abs(distortion - distortion_prev) < eps
+
+    return {
+        "final": (rate, distortion),
+        "trajectory": traj,
+    }

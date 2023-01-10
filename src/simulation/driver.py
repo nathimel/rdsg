@@ -12,7 +12,6 @@ from game import perception
 from misc.util import points_to_df
 from simulation.dynamics import dynamics_map
 from analysis.measure import agents_to_point
-from analysis.rd import compute_rate_distortion
 
 from multiprocessing import Pool, cpu_count
 
@@ -166,9 +165,8 @@ def mean_trajectory(trials: list[SignalingGame]) -> pd.DataFrame:
     return points_df
 
 
-def trial_to_trajectory_df(sg: SignalingGame) -> pd.DataFrame:
-    """Get a dataframe of each (rate, distortion) point that obtains after a round, for all rounds of a single SignalingGame."""
-    trajectory_points = sg.data["points"]
+def trajectory_points_to_df(trajectory_points: list[tuple[float]]) -> pd.DataFrame:
+    """Get a dataframe of each (rate, distortion) point that obtains after one iteration of an optimization procedure, e.g. interactions in RL, updates in a replicator dynamic, or iterations of Blahut-Arimoto."""
     points_df = points_to_df(trajectory_points)
     points_df["round"] = pd.to_numeric(points_df.index)  # continuous scale
     return points_df
@@ -190,7 +188,12 @@ def trials_to_df(
     """
 
     if trajectory:
-        return pd.concat([trial_to_trajectory_df(sg=sg) for sg in signaling_games])
+        return pd.concat(
+            [
+                trajectory_points_to_df(trajectory_points=sg.data["points"])
+                for sg in signaling_games
+            ]
+        )
 
     return points_to_df([sg.data["points"][-1] for sg in signaling_games])
 
@@ -201,6 +204,7 @@ def games_to_languages(games: list[SignalingGame]) -> list[tuple[SignalingLangua
         (agent.to_language() for agent in [g.sender, g.receiver]) for g in games
     ]
     return languages
+
 
 def get_hypothetical_variants(games: list[SignalingGame], num: int) -> pd.DataFrame:
     """For each emergent system from a SignalingGame, generate `num` hypothetical variants by permuting the signals that the system assigns to states."""
@@ -218,8 +222,9 @@ def get_hypothetical_variants(games: list[SignalingGame], num: int) -> pd.DataFr
         variant_points = [
             agents_to_point(
                 speaker=Sender(
-                    language=game.sender.language, 
-                    weights=np.reshape(permuted_weights, (game.sender.shape))),
+                    language=game.sender.language,
+                    weights=np.reshape(permuted_weights, (game.sender.shape)),
+                ),
                 listener=BayesianReceiver(sender, game.prior),
                 prior=game.prior,
                 dist_mat=game.dist_mat,
@@ -227,5 +232,5 @@ def get_hypothetical_variants(games: list[SignalingGame], num: int) -> pd.DataFr
             for permuted_weights in seen
         ]
         points.extend(variant_points)
-    
+
     return points_to_df(points)

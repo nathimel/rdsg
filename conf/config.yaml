@@ -16,6 +16,7 @@ filepaths:
   sampled_points_save_fn: sampled_points.csv
   mean_points_save_fn: mean_points.csv # averages across multiple trials
   counterpart_points_fn: counterpart_points.csv
+  counterpart_trajectories_fn: counterpart_trajectories.csv
   tradeoff_plot_fn: tradeoff.png
   # hydra automatic folder naming
   game_subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/distortion=${game.distortion}
