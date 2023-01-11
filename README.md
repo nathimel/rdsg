@@ -47,23 +47,26 @@ This will perform four basic steps by running the following scripts:
 
     Run one or more trials of an evolutionary dynamics simulation on a sim-max game, and save the resulting (rate, distortion) points to a csv.
 
+    - This script will also generate and save hypothetical variants of the emergent systems for comparison.
+
 2. Estimate Pareto frontier
 
     `python3 src/curve.py`
 
     Estimate the Pareto frontier for sim-max languages balancing simplicity/informativeness trade-off, which is a Rate-Distortion curve computed by the Blahut-Arimoto algorithm.
 
-3. Explore the trade-off space
+3. (Optional) Explore the trade-off space
 
     `python3 src/explore.py`
 
-    Use a geneteic algororithm to explore the space of possible sim-max languages.
+    Use a genetic algorithm to explore the space of possible sim-max languages.
+
+    - This step is optional in the sense hypothetically possible languages are already generated from the emergent systems. It shows, unlike the emergent variants, that simple, uninformative systems are a very high-density region of the space of possible systems. The emergent variants explore more regions of the space.
 
 4. Get a basic plot
 
     `python3 src/plot.py`
 
     Produce a basic plot of the emergent and explored systems compared to the Pareto frontier of optimal solutions.
-    
-    Code for the more detailed plots from the paper can be found in [notebooks](src/notebooks/).
 
+    Code for the more detailed plots from the paper can be found in [notebooks/paper_figures.ipynb](src/notebooks/paper_figures.ipynb).
