@@ -125,7 +125,7 @@ def main(config):
 
         result = get_counterpart_data(ba, betas, alphas)
         df_points = result["points"]
-        df_trajectories = result["trajectories"]
+        df_trajectories = result["trajectories"] # N.B. I don't use these in any of my final analyses, but this code is more general/flexible anyway so keeping it.
 
         # # points
         # df_points = util.points_to_df(ba(betas))
