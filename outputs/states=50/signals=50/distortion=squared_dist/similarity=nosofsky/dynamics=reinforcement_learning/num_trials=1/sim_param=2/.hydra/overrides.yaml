@@ -1,0 +1,3 @@
+- game.size.num_states=50
+- game.size.num_signals=50
+- game.similarity.param=2

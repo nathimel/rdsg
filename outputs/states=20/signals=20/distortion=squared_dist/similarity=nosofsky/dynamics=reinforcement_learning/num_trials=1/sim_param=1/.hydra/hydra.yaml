@@ -104,17 +104,17 @@ hydra:
       - file
     disable_existing_loggers: false
   env: {}
-  mode: MULTIRUN
+  mode: RUN
   searchpath: []
   callbacks: {}
   output_subdir: .hydra
   overrides:
     hydra:
-    - hydra.mode=MULTIRUN
+    - hydra.mode=RUN
     task:
     - game.size.num_states=20
     - game.size.num_signals=20
-    - game.similarity.param=0
+    - game.similarity.param=1
   job:
     name: plot
     chdir: true
@@ -152,7 +152,7 @@ hydra:
     - path: ''
       schema: structured
       provider: schema
-    output_dir: ???
+    output_dir: /Users/nathanielimel/lps/projects/rdsg/outputs/states=20/signals=20/distortion=squared_dist/similarity=nosofsky/dynamics=reinforcement_learning/num_trials=1/sim_param=1
     choices:
       simulation: basic
       simulation/dynamics: reinforcement_learning
@@ -172,44 +172,3 @@ hydra:
       hydra/launcher: basic
       hydra/output: default
   verbose: false
-game:
-  similarity:
-    func: nosofsky
-    param: 0
-  size:
-    num_states: 20
-    num_signals: 20
-  distortion: squared_dist
-explore_space:
-  directions:
-    lower_left: true
-    lower_right: true
-    upper_left: true
-    upper right: true
-  pool_size:
-    seed_generation_size: 10
-    max_mutations: 3
-    num_generations: 10
-simulation:
-  dynamics:
-    name: reinforcement_learning
-    num_rounds: 100000.0
-    learning_rate: 1.0
-  num_trials: 1
-  trajectory: false
-  num_variants: 100
-seed: 42
-multiprocessing: true
-num_processes: null
-filepaths:
-  curve_points_save_fn: curve_points.csv
-  simulation_points_save_fn: simulation_points.csv
-  variant_points_save_fn: variant_points.csv
-  sampled_points_save_fn: sampled_points.csv
-  mean_points_save_fn: mean_points.csv
-  counterpart_points_fn: counterpart_points.csv
-  counterpart_trajectories_fn: counterpart_trajectories.csv
-  tradeoff_plot_fn: tradeoff.png
-  game_subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/distortion=${game.distortion}
-  simulation_subdir: similarity=${game.similarity.func}/dynamics=${simulation.dynamics.name}/num_trials=${simulation.num_trials}/sim_param=${game.similarity.param}
-  leaf_subdir: ${filepaths.game_subdir}/${filepaths.simulation_subdir}
