@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-from typing import Type, Any
+from typing import Any
 
 from game.agents import Sender, Receiver, BayesianReceiver
 from game.languages import State, Signal, StateSpace, SignalMeaning, SignalingLanguage

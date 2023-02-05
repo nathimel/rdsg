@@ -3,7 +3,7 @@
 import numpy as np
 from altk.effcomm.agent import Speaker, Listener
 from altk.language.semantics import Meaning
-from game.languages import State, StateSpace, Signal, SignalMeaning, SignalingLanguage
+from game.languages import Signal, SignalMeaning, SignalingLanguage
 from analysis.tools import bayes
 from typing import Any
 

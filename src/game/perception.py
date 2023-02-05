@@ -93,7 +93,7 @@ def exp_normed(
     distortion: str = "squared_dist",
     **kwargs,
 ) -> np.ndarray:
-    """The (normalized) exponential function, aka softmax, sim(x,y) = exp(-gamma * d(x,y)) / Z.
+    """The (normalized) exponential function sim(x,y) = exp(-gamma * d(x,y)) / Z. Note that this is NOT softmax, which would have denominator Z(x).
 
     Args:
         target: value of state

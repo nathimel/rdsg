@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from analysis.rd import compute_rate_distortion
 from altk.effcomm.agent import Speaker, Listener
-from altk.effcomm.tradeoff import interpolate_data, pareto_min_distances
+from altk.effcomm.tradeoff import interpolate_data
 from scipy.spatial.distance import cdist
 
 

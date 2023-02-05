@@ -1,6 +1,5 @@
 """Functions for computing rate distortion."""
 import numpy as np
-import pandas as pd
 from analysis import tools
 
 # Experiment utils

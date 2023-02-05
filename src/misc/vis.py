@@ -1,6 +1,5 @@
 import plotnine as pn
 import pandas as pd
-import numpy as np
 
 
 def basic_tradeoff_plot(

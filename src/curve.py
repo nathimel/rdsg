@@ -125,24 +125,17 @@ def main(config):
 
         result = get_counterpart_data(ba, betas, alphas)
         df_points = result["points"]
-        df_trajectories = result["trajectories"] # N.B. I don't use these in any of my final analyses, but this code is more general/flexible anyway so keeping it.
-
-        # # points
-        # df_points = util.points_to_df(ba(betas))
-        # df_points["beta"] = betas
-        # df_points["alpha"] = alphas
+        df_trajectories = result[
+            "trajectories"
+        ]  # N.B. I don't use these in any of my final analyses, but this code is more general/flexible anyway so keeping it.
 
     else:  # exp or exp normed
         betas = [0.1, 0.2, 0.5, 0.6, 0.75, 1, 2, 3, 5, 1000]
         betas = np.array(betas).astype(float)
 
         result = get_counterpart_data(ba, betas)
-
         df_points = result["points"]
         df_trajectories = result["trajectories"]
-
-        # df_points = util.points_to_df(ba(betas))
-        # df_points["beta"] = betas
 
     util.save_points_df(counterparts_fn, df_points)
     util.save_points_df(counterpart_trajectories_fn, df_trajectories)

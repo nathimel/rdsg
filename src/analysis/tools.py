@@ -16,6 +16,8 @@ distortion_measures = {
     "squared_dist": squared_dist,
 }
 
+# N.B.: credit for these tools belongs to N. Zaslavsky: https://github.com/nogazs/ib-color-naming/blob/master/src/tools.py
+
 # Information
 def xlogx(v):
     with np.errstate(divide="ignore", invalid="ignore"):
