@@ -11,7 +11,11 @@ from altk.effcomm.optimization import EvolutionaryOptimizer
 
 from game.languages import SignalingLanguage, StateSpace, Signal, SignalMeaning, State
 from game.signal_mutations import AddSignal, RemoveSignal, InterchangeSignal
-from altk.effcomm.information import information_rate, expected_distortion, compute_rate_distortion
+from altk.effcomm.information import (
+    information_rate,
+    expected_distortion,
+    compute_rate_distortion,
+)
 from analysis.measure import agents_to_channel
 from simulation.driver import game_parameters
 

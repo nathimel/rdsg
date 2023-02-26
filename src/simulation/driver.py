@@ -222,10 +222,12 @@ def get_hypothetical_variants(games: list[SignalingGame], num: int) -> pd.DataFr
 
         for permuted_weights in seen:
             speaker = Sender(
-                    language=game.sender.language,
-                    weights=np.reshape(permuted_weights, (game.sender.shape)),
-                )
-            listener = BayesianListener(game.sender, game.prior) # use original (not permuted) sender otherwise we end up with the same system
+                language=game.sender.language,
+                weights=np.reshape(permuted_weights, (game.sender.shape)),
+            )
+            listener = BayesianListener(
+                game.sender, game.prior
+            )  # use original (not permuted) sender otherwise we end up with the same system
             point = agents_to_point(speaker, listener, game.prior, game.dist_mat)
             points.append(point)
 

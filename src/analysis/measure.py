@@ -24,6 +24,7 @@ distortion_measures = {
     "squared_dist": squared_dist,
 }
 
+
 def agents_to_point(
     speaker: Speaker,
     listener: Listener,
