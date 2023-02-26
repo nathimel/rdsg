@@ -8,14 +8,12 @@ from altk.language.semantics import Universe, Meaning, Referent
 class State(Referent):
     """In a simple Lewis-Skyrms signaling game, a state represents the observed input to a Sender and the chosen action of a Receiver. If we want a signaling game to be about Receiver guessing Sender's intended meanings, we identify acts with states."""
 
-    def __init__(self, name: str, weight: float = None) -> None:
+    def __init__(self, name: str) -> None:
         """
         Args:
             name: a str representing a single state in the universe.
-
-            weight: a float that can represent the importance of the state. This quantity can be identified with the prior probability of a state. It can also be used (normalized) to determine the meaning of a signal as a probability distribution over states.
         """
-        super().__init__(name, weight)
+        super().__init__(name)
 
     def __str__(self) -> str:
         return self.name
