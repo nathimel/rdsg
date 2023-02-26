@@ -2,8 +2,7 @@
 
 import numpy as np
 from game.languages import StateSpace, State
-from typing import Callable
-from analysis.tools import distortion_measures
+from analysis.measure import distortion_measures
 
 
 def generate_dist_matrix(

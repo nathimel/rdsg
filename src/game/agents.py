@@ -4,7 +4,6 @@ import numpy as np
 from altk.effcomm.agent import Speaker, Listener
 from altk.language.semantics import Meaning
 from game.languages import Signal, SignalMeaning, SignalingLanguage
-from analysis.tools import bayes
 from typing import Any
 
 
@@ -63,12 +62,12 @@ class Receiver(Listener):
         )
 
 
-class BayesianReceiver(Receiver):
-    """A Bayesian reciever chooses an interpretation deterministically given p(s | w)
+# class BayesianReceiver(Receiver):
+#     """A Bayesian reciever chooses an interpretation deterministically given p(s | w)
 
-    P(S | W) = P(W | S) * P(S) / P(W)
-    """
+#     P(S | W) = P(W | S) * P(S) / P(W)
+#     """
 
-    def __init__(self, sender: Sender, prior: np.ndarray, name: str = None):
-        weights = bayes(sender.normalized_weights(), prior)
-        super().__init__(sender.language, weights=weights, name=name)
+#     def __init__(self, sender: Sender, prior: np.ndarray, name: str = None):
+#         weights = bayes(sender.normalized_weights(), prior)
+#         super().__init__(sender.language, weights=weights, name=name)

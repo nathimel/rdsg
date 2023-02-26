@@ -5,28 +5,9 @@ import os
 import numpy as np
 import pandas as pd
 from misc import util
-from analysis.rd import blahut_arimoto
+from altk.effcomm.information import blahut_arimoto, get_rd_curve
 from analysis.measure import interpolate_curve
 from simulation.driver import game_parameters, trajectory_points_to_df
-
-
-def get_curve_points(
-    prior: np.ndarray,
-    dist_mat: np.ndarray,
-    betas: np.ndarray = np.linspace(start=0, stop=2**7, num=1500),
-    unique=False,
-) -> list[tuple[float]]:
-    """Convert the Rate Distortion theoretical limit to a list of points."""
-    rd = lambda beta: blahut_arimoto(dist_mat, p_x=prior, beta=beta)["final"]
-    pareto_points = [rd(beta) for beta in betas]
-
-    # control non-smoothness
-    if unique:
-        pareto_df = pd.DataFrame(data=pareto_points, columns=["rate", "distortion"])
-        pareto_df = pareto_df.drop_duplicates(subset=["rate"])
-        pareto_points = list(pareto_df.itertuples(index=False, name=None))
-
-    return pareto_points
 
 
 def get_counterpart_data(
@@ -81,11 +62,10 @@ def main(config):
             np.linspace(start=1.0, stop=2**7, num=334),
         ]
     )
-    points = get_curve_points(
+    points = get_rd_curve(
         game_params["prior"],
         game_params["dist_mat"],
         betas,
-        unique=True,
     )
     # curve must be interpolated before notebook analyses
     curve_data = interpolate_curve(
@@ -103,7 +83,6 @@ def main(config):
         game_params["prior"],
         beta,
         ignore_converge=True,  # to get all trajectories same length
-        trajectory=True,
     )
 
     # TODO: use hydra to infer the list of swept alpha values to obtain beta-counterparts, which depends on similarity, distortion

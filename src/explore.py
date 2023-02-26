@@ -11,7 +11,7 @@ from altk.effcomm.optimization import EvolutionaryOptimizer
 
 from game.languages import SignalingLanguage, StateSpace, Signal, SignalMeaning, State
 from game.signal_mutations import AddSignal, RemoveSignal, InterchangeSignal
-from analysis.rd import information_rate, total_distortion, compute_rate_distortion
+from altk.effcomm.information import information_rate, expected_distortion, compute_rate_distortion
 from analysis.measure import agents_to_channel
 from simulation.driver import game_parameters
 
@@ -47,6 +47,10 @@ def generate_expressions(universe: StateSpace) -> list[Signal]:
 
 def lang_to_cond_dist(lang: SignalingLanguage) -> np.ndarray:
     """Get P(a|s) the conditional probability distribution of acts given states, using a language (specifying only states/acts given signals) to initialize altk LiteralSpeakers, LiteralListeners."""
+
+    if len(lang) == 1:
+        breakpoint()
+
     s = LiteralSpeaker(lang)
     r = LiteralListener(lang)
     cond = agents_to_channel(s, r, fill_rows=True)
@@ -86,7 +90,7 @@ def main(config):
         p_xhat_x=lang_to_cond_dist(lang),
     )
 
-    comm_cost_measure = lambda lang: total_distortion(
+    comm_cost_measure = lambda lang: expected_distortion(
         p_x=prior,
         p_xhat_x=lang_to_cond_dist(lang),
         dist_mat=dist_mat,

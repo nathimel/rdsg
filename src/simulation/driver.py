@@ -5,7 +5,8 @@ import pandas as pd
 from tqdm import tqdm
 from typing import Any
 
-from game.agents import Sender, Receiver, BayesianReceiver
+from altk.effcomm.agent import BayesianListener
+from game.agents import Sender, Receiver
 from game.languages import State, Signal, StateSpace, SignalMeaning, SignalingLanguage
 from game.signaling_game import SignalingGame
 from game import perception
@@ -219,18 +220,13 @@ def get_hypothetical_variants(games: list[SignalingGame], num: int) -> pd.DataFr
             permuted = np.random.permutation(sender.weights.T).T
             seen.add(tuple(permuted.flatten()))
 
-        variant_points = [
-            agents_to_point(
-                speaker=Sender(
+        for permuted_weights in seen:
+            speaker = Sender(
                     language=game.sender.language,
                     weights=np.reshape(permuted_weights, (game.sender.shape)),
-                ),
-                listener=BayesianReceiver(sender, game.prior),
-                prior=game.prior,
-                dist_mat=game.dist_mat,
-            )
-            for permuted_weights in seen
-        ]
-        points.extend(variant_points)
+                )
+            listener = BayesianListener(game.sender, game.prior) # use original (not permuted) sender otherwise we end up with the same system
+            point = agents_to_point(speaker, listener, game.prior, game.dist_mat)
+            points.append(point)
 
     return points_to_df(points)
