@@ -20,7 +20,7 @@ def generate_dist_matrix(
         [
             np.array(
                 [
-                    distortion_measures[distortion](t.weight, u.weight)
+                    distortion_measures[distortion](t.data, u.data)
                     for u in universe.referents
                 ]
             )
@@ -45,8 +45,8 @@ def generate_sim_matrix(universe: StateSpace, similarity: str, **kwargs) -> np.n
     return np.array(
         [
             sim_func(
-                target=t.weight,
-                objects=[u.weight for u in universe.referents],
+                target=t.data,
+                objects=[u.data for u in universe.referents],
                 **kwargs,
             )
             for t in universe.referents

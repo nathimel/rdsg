@@ -40,7 +40,7 @@ def game_parameters(
     signal_names = [f"signal_{i}" for i in range(num_signals)]
 
     # Construct the universe of states, and language defined over it
-    universe = StateSpace([State(name=str(name), weight=name) for name in state_names])
+    universe = StateSpace([State(name=str(name)) for name in state_names])
 
     # All meanings are dummy placeholders at this stage, but they can be substantive once agents are given a weight matrix.
     dummy_meaning = SignalMeaning(states=[], universe=universe)

@@ -52,8 +52,8 @@ def generate_expressions(universe: StateSpace) -> list[Signal]:
 def lang_to_cond_dist(lang: SignalingLanguage) -> np.ndarray:
     """Get P(a|s) the conditional probability distribution of acts given states, using a language (specifying only states/acts given signals) to initialize altk LiteralSpeakers, LiteralListeners."""
 
-    if len(lang) == 1:
-        breakpoint()
+    # if len(lang) == 1:
+    #     breakpoint()
 
     s = LiteralSpeaker(lang)
     r = LiteralListener(lang)
@@ -90,8 +90,8 @@ def main(config):
     dist_mat = game_params["dist_mat"]
 
     complexity_measure = lambda lang: information_rate(
-        p_x=prior,
-        p_xhat_x=lang_to_cond_dist(lang),
+        source=prior,
+        encoder=lang_to_cond_dist(lang),
     )
 
     comm_cost_measure = lambda lang: expected_distortion(

@@ -1,1 +1,3 @@
 - game/similarity=nosofsky_normed
+- game.distortion=squared_dist
+- explore_space/pool_size=medium

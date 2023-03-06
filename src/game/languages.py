@@ -14,6 +14,7 @@ class State(Referent):
             name: a str representing a single state in the universe.
         """
         super().__init__(name)
+        self.data = int(name)
 
     def __str__(self) -> str:
         return self.name
