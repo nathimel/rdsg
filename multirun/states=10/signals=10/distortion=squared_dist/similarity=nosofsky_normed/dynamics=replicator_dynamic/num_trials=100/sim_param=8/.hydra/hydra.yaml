@@ -112,18 +112,17 @@ hydra:
     hydra:
     - hydra.mode=MULTIRUN
     task:
-    - game/similarity=nosofsky_normed
-    - game.distortion=squared_dist
-    - simulation.num_trials=100
-    - simulation.num_variants=1000
-    - game.similarity.param=8
     - simulation/dynamics=replicator_dynamic
+    - simulation.num_trials=100
+    - game.similarity.param=8
+    - game/similarity=nosofsky_normed
+    - simulation.trajectory=True
   job:
     name: run_simulations
     chdir: true
-    override_dirname: game/similarity=nosofsky_normed,simulation.num_variants=1000,simulation/dynamics=replicator_dynamic
-    id: '11'
-    num: 11
+    override_dirname: game/similarity=nosofsky_normed,simulation.trajectory=True,simulation/dynamics=replicator_dynamic
+    id: '4'
+    num: 4
     config_name: config
     env_set: {}
     env_copy: []

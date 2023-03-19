@@ -77,6 +77,10 @@ class Signal(Expression):
         """
         super().__init__(form, meaning)
 
+        # Have to add this after the new altk update
+        self.form = form
+        self.meaning = meaning
+
     def yaml_rep(self):
         """Convert to a dictionary representation of the expression for compact saving to .yml files."""
         return {

@@ -171,4 +171,4 @@ similarity_functions = {
 
 
 def sim_utility(x: State, y: State, sim_mat: np.ndarray) -> float:
-    return sim_mat[int(x.weight), int(y.weight)]
+    return sim_mat[int(x.data), int(y.data)]

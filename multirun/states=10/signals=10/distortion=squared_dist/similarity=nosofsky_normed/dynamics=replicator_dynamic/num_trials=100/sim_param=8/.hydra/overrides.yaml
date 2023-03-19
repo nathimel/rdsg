@@ -1,6 +1,5 @@
-- game/similarity=nosofsky_normed
-- game.distortion=squared_dist
-- simulation.num_trials=100
-- simulation.num_variants=1000
-- game.similarity.param=8
 - simulation/dynamics=replicator_dynamic
+- simulation.num_trials=100
+- game.similarity.param=8
+- game/similarity=nosofsky_normed
+- simulation.trajectory=True

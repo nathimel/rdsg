@@ -43,26 +43,28 @@ def reward(agent: CommunicativeAgent, policy: dict[str, Any], amount: float) -> 
     agent.weights[agent.policy_to_indices(policy)] += amount
 
 
-class RothErevReinforcementLearning(Dynamics):
+class Learning(Dynamics):
     def __init__(self, game: SignalingGame, **kwargs) -> None:
         super().__init__(game, **kwargs)
-        self.num_rounds = kwargs["num_rounds"]
-        self.learning_rate = kwargs["learning_rate"]
+        self.num_rounds = kwargs["num_rounds"]        
+        self.round_info = dict()
+        self.utility = lambda x, y: sim_utility(x, y, sim_mat=self.game.utility)
+
+    def update(self):
+        """Implements the learning mechanism that updates the behavior of agents based on, e.g. the observed round_utility."""
+        raise NotImplementedError
 
     def run(self):
-        """Simulate reinforcement learning of the pair of agents by playing the signaling game and reinforcing actions depending on their success (utiltity)."""
-
-        sender = self.game.sender
-        receiver = self.game.receiver
-        utility = lambda x, y: sim_utility(x, y, sim_mat=self.game.utility)
+        """Simulate learning for the pair of agents by repeatedly playing the signaling game."""
 
         for _ in tqdm(range(self.num_rounds)):
 
             # track data
+            # breakpoint()
             self.game.data["points"].append(
                 agents_to_point(
-                    speaker=sender,
-                    listener=receiver,
+                    speaker=self.game.sender,
+                    listener=self.game.receiver,
                     prior=self.game.prior,
                     dist_mat=self.game.dist_mat,
                 )
@@ -72,36 +74,87 @@ class RothErevReinforcementLearning(Dynamics):
             target = np.random.choice(a=self.game.states, p=self.game.prior)
 
             # record interaction
-            signal = sender.encode(target)
-            output = receiver.decode(signal)
-            amount = utility(target, output) * self.learning_rate
+            signal = self.game.sender.encode(target)
+            output = self.game.receiver.decode(signal)
+            payoff = self.utility(target, output)
 
+            self.round_info = {"target": target, "signal": signal, "output": output, "payoff": payoff}
+        
             # update agents
+            self.update()
+
+class RothErevReinforcementLearning(Learning):
+    def __init__(self, game: SignalingGame, **kwargs) -> None:
+        super().__init__(game, **kwargs)
+        self.learning_rate = kwargs["learning_rate"]
+
+    def update(self):
+        """The Roth Erev reinforcement step."""
+
+        target = self.round_info["target"]
+        signal = self.round_info["signal"]
+        output = self.round_info["output"]
+        amount = self.round_info["payoff"] * self.learning_rate
+
+        reward(
+            agent=self.game.sender,
+            policy={"referent": target, "expression": signal},
+            amount=amount,
+        )
+        reward(
+            agent=self.game.receiver,
+            policy={"referent": output, "expression": signal},
+            amount=amount,
+        )
+
+class SpillOverRERL(RothErevReinforcementLearning):
+    def __init__(self, game: SignalingGame, **kwargs) -> None:
+        super().__init__(game, **kwargs)
+
+    def update(self):
+        """The Roth Erev with 'spillover' generalization reinforcement step."""
+
+        target = self.round_info["target"]
+        signal = self.round_info["signal"]
+        output = self.round_info["output"]
+        max_payoff = self.round_info["payoff"] * self.learning_rate
+
+        # TODO: let the spillover / confusion matrix vary independently of utility
+        # The 'generalized' reinforcement (all agents' actions)
+        for state in self.game.states:
+
+            policy = {"referent": state, "expression": signal}
+
+            # For Sender, reinforce signal (given similar states)
+            sender_spillover = self.utility(state, target) * max_payoff
             reward(
-                agent=sender,
-                policy={"referent": target, "expression": signal},
-                amount=amount,
-            )
-            reward(
-                agent=receiver,
-                policy={"referent": output, "expression": signal},
-                amount=amount,
+                agent=self.game.sender,
+                policy=policy,
+                amount=sender_spillover,
             )
 
-        self.game.sender = sender
-        self.game.receiver = receiver
-
+            # For Receiver, reinforce similar states (given the signal)
+            receiver_spillover = self.utility(state, output) * max_payoff
+            reward(
+                agent=self.game.receiver,
+                policy=policy,
+                amount=receiver_spillover,
+            )
 
 ##############################################################################
 # Discrete-time replicator dynamic
 ##############################################################################
 
 
-class DiscreteTimeReplicatorDynamic(Dynamics):
+class NoisyDiscreteTimeReplicatorDynamic(Dynamics):
+
     def __init__(self, game: SignalingGame, **kwargs) -> None:
         super().__init__(game, **kwargs)
         self.max_its = kwargs["max_its"]
         self.threshold = kwargs["threshold"]
+
+        # TODO: let this confusion matrix vary independently of utility. When I get hydra figured out, I'll remove the extra classes for R.D. and R.L., and just let the noise / generalization be hparams.
+        self.confusion = self.game.utility
 
     def run(self):
         """Simulate evolution of strategies in a near-infinite population of agents x using a discrete-time version of the replicator equation:
@@ -111,6 +164,7 @@ class DiscreteTimeReplicatorDynamic(Dynamics):
         Changes in agent type (pure strategies) depend only on their frequency and their fitness.
         """
         U = self.game.utility
+        C = self.confusion
         prior = self.game.prior
         n_signals = len(self.game.signals)
         n_states = len(self.game.states)
@@ -151,6 +205,7 @@ class DiscreteTimeReplicatorDynamic(Dynamics):
             )
             S *= U_sender
             S = normalize_rows(S)
+            S = C @ S
 
             U_receiver = np.array(
                 [
@@ -160,6 +215,7 @@ class DiscreteTimeReplicatorDynamic(Dynamics):
             )
             R *= U_receiver
             R = normalize_rows(R)
+            R = R @ C
 
             # Check for convergence
             if (
@@ -175,7 +231,17 @@ class DiscreteTimeReplicatorDynamic(Dynamics):
         self.game.receiver.weights = R
 
 
+class DiscreteTimeReplicatorDynamic(NoisyDiscreteTimeReplicatorDynamic):
+    """A special case of the Noisy DTRD when there is no noise, i.e. the confusion matrix is the identity matrix.
+    """
+    def __init__(self, game: SignalingGame, **kwargs) -> None:
+        super().__init__(game, **kwargs)
+        self.confusion = np.eye(len(self.game.states))
+
+
 dynamics_map = {
     "reinforcement_learning": RothErevReinforcementLearning,
+    "spillover_learning": SpillOverRERL,
     "replicator_dynamic": DiscreteTimeReplicatorDynamic,
+    "noisy_replicator_dynamic": NoisyDiscreteTimeReplicatorDynamic,
 }

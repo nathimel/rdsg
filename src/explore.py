@@ -5,7 +5,7 @@ import numpy as np
 
 from tqdm import tqdm
 
-from altk.effcomm.sampling import generate_languages
+from altk.language.sampling import generate_languages
 from altk.effcomm.agent import LiteralSpeaker, LiteralListener
 from altk.effcomm.optimization import EvolutionaryOptimizer
 
@@ -116,21 +116,42 @@ def main(config):
         verbose=True,
     )
     seed_population = result["languages"]
-    id_start = result["id_start"]
+    # id_start = result["id_start"]
+
+    # BUG: God damn it shane
 
     # Step 2: use optimizer as an exploration / sampling method:
     # estimate FOUR pareto frontiers using the evolutionary algorithm; one for each corner of the 2D space of possible langs
+    # directions = {
+    #     "lower_left": ("complexity", "comm_cost"),
+    #     "lower_right": ("simplicity", "comm_cost"),
+    #     "upper_left": ("complexity", "informativity"),
+    #     "upper_right": ("simplicity", "informativity"),
+    # }
+    # objectives = {
+    #     "comm_cost": comm_cost_measure,
+    #     "informativity": lambda lang: -1 * comm_cost_measure(lang),
+    #     "complexity": complexity_measure,
+    #     "simplicity": lambda lang: -1 * complexity_measure(lang),
+    # }
+
+    # objective functions
+    comm_cost = comm_cost_measure
+    informativity = lambda lang: - comm_cost_measure(lang)
+    complexity = complexity_measure
+    simplicity = lambda lang: - complexity_measure(lang)
+
     directions = {
-        "lower_left": ("complexity", "comm_cost"),
-        "lower_right": ("simplicity", "comm_cost"),
-        "upper_left": ("complexity", "informativity"),
-        "upper_right": ("simplicity", "informativity"),
-    }
-    objectives = {
-        "comm_cost": comm_cost_measure,
-        "informativity": lambda lang: -1 * comm_cost_measure(lang),
-        "complexity": complexity_measure,
-        "simplicity": lambda lang: -1 * complexity_measure(lang),
+        "lower_left": [complexity, comm_cost],
+        "lower_right": [simplicity, comm_cost],
+        "upper_left": [complexity, informativity],
+        "upper_right": [simplicity, informativity],
+    } 
+    direction_names = {
+        "lower_left": ["complexity", "comm_cost"],
+        "lower_right": ["simplicity", "comm_cost"],
+        "upper_left": ["complexity", "informativity"],
+        "upper_right": ["simplicity", "informativity"],
     }
 
     # Load signal-specific mutations
@@ -141,15 +162,15 @@ def main(config):
     ]
 
     # Initialize optimizer
-    optimizer = EvolutionaryOptimizer(
-        objectives=objectives,
-        expressions=expressions,
-        mutations=mutations,
-        sample_size=seed_size,
-        max_mutations=max_mutations,
-        generations=generations,
-        lang_size=lang_size,
-    )
+    # optimizer = EvolutionaryOptimizer(
+    #     objectives=objectives,
+    #     expressions=expressions,
+    #     mutations=mutations,
+    #     sample_size=seed_size,
+    #     max_mutations=max_mutations,
+    #     generations=generations,
+    #     lang_size=lang_size,
+    # )
 
     # Explore corners of the possible language space
     # TODO: use multiprocessing
@@ -158,22 +179,31 @@ def main(config):
     for direction in directions:
         if direction not in kwargs["explore_directions"]:
             continue
+        
+        objective_pair = directions[direction]
 
-        # set directions of optimization
-        x, y = directions[direction]
-        optimizer.x = x
-        optimizer.y = y
+        optimizer = EvolutionaryOptimizer(
+        objectives=objective_pair,
+        expressions=expressions,
+        mutations=mutations,
+        sample_size=seed_size,
+        max_mutations=max_mutations,
+        generations=generations,
+        lang_size=lang_size,
+        )
+
+        x, y = direction_names[direction]
         print(f"Optimizing for {direction} region (min {x}, {y}) ...")
 
         # run algorithm
         result = optimizer.fit(
             seed_population=seed_population,
-            id_start=id_start,
+            # id_start=id_start,
         )
 
         # collect results
         results[direction] = result
-        id_start = result["id_start"]
+        # id_start = result["id_start"]
         pool.extend(results[direction]["explored_languages"])
 
     pool = list(set(pool))

@@ -1,0 +1,5 @@
+- simulation/dynamics=replicator_dynamic
+- simulation.num_trials=6
+- game.similarity.param=8
+- game/similarity=nosofsky_normed
+- simulation.trajectory=True

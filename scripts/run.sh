@@ -4,7 +4,7 @@
 
 python src/run_simulations.py
 
-# python src/explore.py # optional now
+python src/explore.py
 
 python src/curve.py
 

@@ -114,7 +114,7 @@ hydra:
     task:
     - simulation/dynamics=replicator_dynamic
   job:
-    name: run_simulations
+    name: plot
     chdir: true
     override_dirname: simulation/dynamics=replicator_dynamic
     id: ???

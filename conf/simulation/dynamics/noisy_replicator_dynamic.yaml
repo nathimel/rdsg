@@ -1,0 +1,3 @@
+name: noisy_replicator_dynamic
+max_its: 200
+threshold: 1e-5

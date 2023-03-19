@@ -115,11 +115,12 @@ hydra:
     - game/similarity=nosofsky_normed
     - game.distortion=squared_dist
     - simulation.num_trials=100
-    - explore_space/pool_size=large
+    - simulation.trajectory=True
+    - simulation.num_variants=1000
   job:
     name: curve
     chdir: true
-    override_dirname: explore_space/pool_size=large,game/similarity=nosofsky_normed
+    override_dirname: game/similarity=nosofsky_normed,simulation.num_variants=1000,simulation.trajectory=True
     id: ???
     num: ???
     config_name: config
@@ -138,7 +139,7 @@ hydra:
         - game.distortion
         - simulation.dynamics.name
         - simulation.num_trials
-        - simulation.dynamics.rate
+        - simulation.dynamics.learning_rate
   runtime:
     version: 1.3.1
     version_base: '1.3'
@@ -158,7 +159,7 @@ hydra:
       simulation: basic
       simulation/dynamics: reinforcement_learning
       explore_space: basic
-      explore_space/pool_size: large
+      explore_space/pool_size: small
       explore_space/directions: all
       game: basic
       game/size: ten

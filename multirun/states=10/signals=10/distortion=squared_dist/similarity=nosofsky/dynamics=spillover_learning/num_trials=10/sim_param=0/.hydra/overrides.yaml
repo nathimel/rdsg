@@ -1,0 +1,4 @@
+- simulation/dynamics=spillover_learning
+- simulation.num_trials=10
+- game.similarity.param=0
+- simulation.trajectory=True

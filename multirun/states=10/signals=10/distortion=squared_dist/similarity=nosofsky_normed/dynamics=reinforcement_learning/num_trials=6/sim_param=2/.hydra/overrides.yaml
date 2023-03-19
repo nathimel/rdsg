@@ -1,0 +1,5 @@
+- simulation/dynamics=reinforcement_learning
+- simulation.num_trials=6
+- game.similarity.param=2
+- game/similarity=nosofsky_normed
+- simulation.trajectory=True

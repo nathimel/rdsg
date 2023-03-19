@@ -112,13 +112,16 @@ hydra:
     hydra:
     - hydra.mode=MULTIRUN
     task:
-    - game.size.num_states=20
-    - game.size.num_signals=20
-    - game.similarity.param=0
+    - simulation/dynamics=replicator_dynamic, noisy_replicator_dynamic
+    - simulation.num_trials=100
+    - game.similarity.param=0,1,2,4,8,16
+    - game/similarity=nosofsky_normed
+    - simulation.trajectory=True
   job:
-    name: plot
+    name: run_simulations
     chdir: true
-    override_dirname: ''
+    override_dirname: game/similarity=nosofsky_normed,simulation.trajectory=True,simulation/dynamics=replicator_dynamic,
+      noisy_replicator_dynamic
     id: ???
     num: ???
     config_name: config
@@ -161,7 +164,7 @@ hydra:
       explore_space/directions: all
       game: basic
       game/size: ten
-      game/similarity: nosofsky
+      game/similarity: nosofsky_normed
       hydra/env: default
       hydra/callbacks: null
       hydra/job_logging: default
@@ -174,11 +177,11 @@ hydra:
   verbose: false
 game:
   similarity:
-    func: nosofsky
+    func: nosofsky_normed
     param: 0
   size:
-    num_states: 20
-    num_signals: 20
+    num_states: 10
+    num_signals: 10
   distortion: squared_dist
 explore_space:
   directions:
@@ -195,8 +198,8 @@ simulation:
     name: reinforcement_learning
     num_rounds: 100000.0
     learning_rate: 1.0
-  num_trials: 1
-  trajectory: false
+  num_trials: 100
+  trajectory: true
   num_variants: 100
 seed: 42
 multiprocessing: true

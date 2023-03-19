@@ -28,9 +28,9 @@ def main(config):
         # save means
         df_means = mean_trajectory(trials)
         util.save_points_df(fn=config.filepaths.mean_points_save_fn, df=df_means)
-    else:
-        df_points = trials_to_df(trials, kwargs["trajectory"])
-        util.save_points_df(fn=config.filepaths.simulation_points_save_fn, df=df_points)
+
+    df_points = trials_to_df(trials)
+    util.save_points_df(fn=config.filepaths.simulation_points_save_fn, df=df_points)
 
 
 if __name__ == "__main__":

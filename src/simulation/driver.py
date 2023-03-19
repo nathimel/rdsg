@@ -74,6 +74,8 @@ def game_parameters(
         )
     utility = perception.generate_sim_matrix(universe, similarity, **sim_kwargs)
 
+    # breakpoint()
+
     # parameters for a signaling game
     return {
         "states": universe.referents,
@@ -173,11 +175,8 @@ def trajectory_points_to_df(trajectory_points: list[tuple[float]]) -> pd.DataFra
     return points_df
 
 
-def trials_to_df(
-    signaling_games: list[SignalingGame],
-    trajectory: bool = False,
-) -> list[tuple[float]]:
-    """Compute the pareto points for a list of resulting simulation languages, based on the distributions of their senders.
+def trials_to_df(signaling_games: list[SignalingGame]) -> list[tuple[float]]:
+    """Compute the pareto points for a list of resulting simulation languages, based on the distributions of their senders, receiver.
 
     Args:
         trials: a list of SignalingGames after convergence
@@ -187,15 +186,6 @@ def trials_to_df(
     Returns:
         df: a pandas DataFrame of (rate, distortion) points
     """
-
-    if trajectory:
-        return pd.concat(
-            [
-                trajectory_points_to_df(trajectory_points=sg.data["points"])
-                for sg in signaling_games
-            ]
-        )
-
     return points_to_df([sg.data["points"][-1] for sg in signaling_games])
 
 

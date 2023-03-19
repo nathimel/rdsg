@@ -56,11 +56,11 @@ def experiment_parameters(config: dict[str, Any]) -> dict[str, Any]:
     }
 
     # Dynamics
-    if kwargs["dynamics"] == "reinforcement_learning":
+    if kwargs["dynamics"] in ["reinforcement_learning", "spillover_learning"]:
         kwargs["num_rounds"] = int(float(config.simulation.dynamics.num_rounds))
         kwargs["learning_rate"] = float(config.simulation.dynamics.learning_rate)
 
-    if kwargs["dynamics"] == "replicator_dynamic":
+    if kwargs["dynamics"] in ["replicator_dynamic", "noisy_replicator_dynamic"]:
         kwargs["max_its"] = config.simulation.dynamics.max_its
         kwargs["threshold"] = config.simulation.dynamics.threshold
 
