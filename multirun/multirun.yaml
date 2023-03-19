@@ -112,16 +112,19 @@ hydra:
     hydra:
     - hydra.mode=MULTIRUN
     task:
-    - simulation/dynamics=replicator_dynamic, noisy_replicator_dynamic
-    - simulation.num_trials=100
-    - game.similarity.param=0,1,2,4,8,16
+    - game.size.num_states=20
+    - game.size.num_signals=10
     - game/similarity=nosofsky_normed
+    - game.distortion=squared_dist
+    - simulation.num_trials=100
     - simulation.trajectory=True
+    - simulation.num_variants=1000
+    - game.similarity.param=0, 1, 2, 4, 6, 8, 16
+    - simulation/dynamics=replicator_dynamic
   job:
     name: run_simulations
     chdir: true
-    override_dirname: game/similarity=nosofsky_normed,simulation.trajectory=True,simulation/dynamics=replicator_dynamic,
-      noisy_replicator_dynamic
+    override_dirname: game/similarity=nosofsky_normed,simulation.num_variants=1000,simulation.trajectory=True,simulation/dynamics=replicator_dynamic
     id: ???
     num: ???
     config_name: config
@@ -158,7 +161,7 @@ hydra:
     output_dir: ???
     choices:
       simulation: basic
-      simulation/dynamics: reinforcement_learning
+      simulation/dynamics: replicator_dynamic
       explore_space: basic
       explore_space/pool_size: small
       explore_space/directions: all
@@ -180,7 +183,7 @@ game:
     func: nosofsky_normed
     param: 0
   size:
-    num_states: 10
+    num_states: 20
     num_signals: 10
   distortion: squared_dist
 explore_space:
@@ -195,12 +198,12 @@ explore_space:
     num_generations: 10
 simulation:
   dynamics:
-    name: reinforcement_learning
-    num_rounds: 100000.0
-    learning_rate: 1.0
+    name: replicator_dynamic
+    max_its: 200
+    threshold: 1.0e-05
   num_trials: 100
   trajectory: true
-  num_variants: 100
+  num_variants: 1000
 seed: 42
 multiprocessing: true
 num_processes: null

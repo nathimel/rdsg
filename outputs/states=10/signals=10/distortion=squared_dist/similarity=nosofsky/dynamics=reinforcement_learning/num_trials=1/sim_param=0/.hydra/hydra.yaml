@@ -111,11 +111,12 @@ hydra:
   overrides:
     hydra:
     - hydra.mode=RUN
-    task: []
+    task:
+    - explore_space/pool_size=medium
   job:
     name: plot
     chdir: true
-    override_dirname: ''
+    override_dirname: explore_space/pool_size=medium
     id: ???
     num: ???
     config_name: config
@@ -154,7 +155,7 @@ hydra:
       simulation: basic
       simulation/dynamics: reinforcement_learning
       explore_space: basic
-      explore_space/pool_size: small
+      explore_space/pool_size: medium
       explore_space/directions: all
       game: basic
       game/size: ten

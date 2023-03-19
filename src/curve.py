@@ -57,8 +57,8 @@ def main(config):
     # B-A gets a bit sparse in low-rate regions for np.linspace
     betas = np.concatenate(
         [
-            np.linspace(start=0, stop=0.29, num=33),
-            np.linspace(start=0.3, stop=0.9, num=33),
+            np.linspace(start=0, stop=0.29, num=333),
+            np.linspace(start=0.3, stop=0.9, num=333),
             np.linspace(start=1.0, stop=2**7, num=334),
         ]
     )

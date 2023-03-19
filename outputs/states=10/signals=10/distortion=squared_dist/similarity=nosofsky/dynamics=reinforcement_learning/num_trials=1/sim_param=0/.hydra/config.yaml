@@ -13,9 +13,9 @@ explore_space:
     upper_left: true
     upper right: true
   pool_size:
-    seed_generation_size: 10
+    seed_generation_size: 1000.0
     max_mutations: 3
-    num_generations: 10
+    num_generations: 100
 simulation:
   dynamics:
     name: reinforcement_learning

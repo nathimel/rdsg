@@ -74,8 +74,6 @@ def game_parameters(
         )
     utility = perception.generate_sim_matrix(universe, similarity, **sim_kwargs)
 
-    # breakpoint()
-
     # parameters for a signaling game
     return {
         "states": universe.referents,

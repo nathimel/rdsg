@@ -1,0 +1,8 @@
+- game.size.num_signals=10
+- game.size.num_states=50
+- simulation/dynamics=noisy_replicator_dynamic
+- simulation.num_trials=100
+- game.similarity.param=16
+- game/similarity=nosofsky_normed
+- simulation.trajectory=True
+- multiprocessing=False

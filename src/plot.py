@@ -26,7 +26,6 @@ def main(config):
     # sampled_data = pd.read_csv(sampled_fn)
     variants_data = pd.read_csv(variants_fn)
 
-    # breakpoint()
     # get plot
     # plot = vis.basic_tradeoff_plot(curve_data, sim_data, sampled_data)
     plot = vis.basic_tradeoff_plot(curve_data, sim_data, sampled_data=variants_data)

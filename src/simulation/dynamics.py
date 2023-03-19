@@ -46,7 +46,7 @@ def reward(agent: CommunicativeAgent, policy: dict[str, Any], amount: float) -> 
 class Learning(Dynamics):
     def __init__(self, game: SignalingGame, **kwargs) -> None:
         super().__init__(game, **kwargs)
-        self.num_rounds = kwargs["num_rounds"]        
+        self.num_rounds = kwargs["num_rounds"]
         self.round_info = dict()
         self.utility = lambda x, y: sim_utility(x, y, sim_mat=self.game.utility)
 
@@ -78,10 +78,16 @@ class Learning(Dynamics):
             output = self.game.receiver.decode(signal)
             payoff = self.utility(target, output)
 
-            self.round_info = {"target": target, "signal": signal, "output": output, "payoff": payoff}
-        
+            self.round_info = {
+                "target": target,
+                "signal": signal,
+                "output": output,
+                "payoff": payoff,
+            }
+
             # update agents
             self.update()
+
 
 class RothErevReinforcementLearning(Learning):
     def __init__(self, game: SignalingGame, **kwargs) -> None:
@@ -106,6 +112,7 @@ class RothErevReinforcementLearning(Learning):
             policy={"referent": output, "expression": signal},
             amount=amount,
         )
+
 
 class SpillOverRERL(RothErevReinforcementLearning):
     def __init__(self, game: SignalingGame, **kwargs) -> None:
@@ -141,13 +148,13 @@ class SpillOverRERL(RothErevReinforcementLearning):
                 amount=receiver_spillover,
             )
 
+
 ##############################################################################
 # Discrete-time replicator dynamic
 ##############################################################################
 
 
 class NoisyDiscreteTimeReplicatorDynamic(Dynamics):
-
     def __init__(self, game: SignalingGame, **kwargs) -> None:
         super().__init__(game, **kwargs)
         self.max_its = kwargs["max_its"]
@@ -209,8 +216,8 @@ class NoisyDiscreteTimeReplicatorDynamic(Dynamics):
 
             U_receiver = np.array(
                 [
-                    [(prior * S[:, w]) @ U[s] for w in range(n_signals)]
-                    for s in range(n_states)
+                    [(prior * S[:, w]) @ U[s] for s in range(n_states)]
+                    for w in range(n_signals)
                 ]
             )
             R *= U_receiver
@@ -232,8 +239,8 @@ class NoisyDiscreteTimeReplicatorDynamic(Dynamics):
 
 
 class DiscreteTimeReplicatorDynamic(NoisyDiscreteTimeReplicatorDynamic):
-    """A special case of the Noisy DTRD when there is no noise, i.e. the confusion matrix is the identity matrix.
-    """
+    """A special case of the Noisy DTRD when there is no noise, i.e. the confusion matrix is the identity matrix."""
+
     def __init__(self, game: SignalingGame, **kwargs) -> None:
         super().__init__(game, **kwargs)
         self.confusion = np.eye(len(self.game.states))

@@ -3,11 +3,13 @@
 SWEEP=(
     "game.similarity.param=0, 1, 2, 4, 6, 8, 16"
     # "simulation/dynamics=spillover_learning"
-    "simulation/dynamics=noisy_replicator_dynamic"
-    # "simulation/dynamics=replicator_dynamic"
+    # "simulation/dynamics=noisy_replicator_dynamic, replicator_dynamic"
+    "simulation/dynamics=replicator_dynamic"
     )
 
 ARGS=(
+    "game.size.num_states=20"
+    "game.size.num_signals=10"
     "game/similarity=nosofsky_normed" 
     "game.distortion=squared_dist" 
     "simulation.num_trials=100"

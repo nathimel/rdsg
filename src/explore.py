@@ -51,10 +51,6 @@ def generate_expressions(universe: StateSpace) -> list[Signal]:
 
 def lang_to_cond_dist(lang: SignalingLanguage) -> np.ndarray:
     """Get P(a|s) the conditional probability distribution of acts given states, using a language (specifying only states/acts given signals) to initialize altk LiteralSpeakers, LiteralListeners."""
-
-    # if len(lang) == 1:
-    #     breakpoint()
-
     s = LiteralSpeaker(lang)
     r = LiteralListener(lang)
     cond = agents_to_channel(s, r, fill_rows=True)
@@ -137,16 +133,16 @@ def main(config):
 
     # objective functions
     comm_cost = comm_cost_measure
-    informativity = lambda lang: - comm_cost_measure(lang)
+    informativity = lambda lang: -comm_cost_measure(lang)
     complexity = complexity_measure
-    simplicity = lambda lang: - complexity_measure(lang)
+    simplicity = lambda lang: -complexity_measure(lang)
 
     directions = {
         "lower_left": [complexity, comm_cost],
         "lower_right": [simplicity, comm_cost],
         "upper_left": [complexity, informativity],
         "upper_right": [simplicity, informativity],
-    } 
+    }
     direction_names = {
         "lower_left": ["complexity", "comm_cost"],
         "lower_right": ["simplicity", "comm_cost"],
@@ -174,22 +170,21 @@ def main(config):
 
     # Explore corners of the possible language space
     # TODO: use multiprocessing
-    results = {k: None for k in directions}
     pool = []
     for direction in directions:
         if direction not in kwargs["explore_directions"]:
             continue
-        
+
         objective_pair = directions[direction]
 
         optimizer = EvolutionaryOptimizer(
-        objectives=objective_pair,
-        expressions=expressions,
-        mutations=mutations,
-        sample_size=seed_size,
-        max_mutations=max_mutations,
-        generations=generations,
-        lang_size=lang_size,
+            objectives=objective_pair,
+            expressions=expressions,
+            mutations=mutations,
+            sample_size=seed_size,
+            max_mutations=max_mutations,
+            generations=generations,
+            lang_size=lang_size,
         )
 
         x, y = direction_names[direction]
@@ -201,10 +196,8 @@ def main(config):
             # id_start=id_start,
         )
 
-        # collect results
-        results[direction] = result
         # id_start = result["id_start"]
-        pool.extend(results[direction]["explored_languages"])
+        pool.extend(result["explored_languages"])
 
     pool = list(set(pool))
 

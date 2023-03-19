@@ -57,7 +57,6 @@ def agents_to_channel(
     Returns:
         p_cond: the 'communication channel' represented by P(act|state).
     """
-    # breakpoint()
     speaker_weights = speaker.normalized_weights()
     listener_weights = listener.normalized_weights()
     p_cond = speaker_weights @ listener_weights
