@@ -125,8 +125,8 @@ hydra:
     name: run_simulations
     chdir: true
     override_dirname: game/similarity=nosofsky_normed,simulation.num_variants=1000,simulation.trajectory=True,simulation/dynamics=replicator_dynamic
-    id: '6'
-    num: 6
+    id: '25'
+    num: 25
     config_name: config
     env_set: {}
     env_copy: []
