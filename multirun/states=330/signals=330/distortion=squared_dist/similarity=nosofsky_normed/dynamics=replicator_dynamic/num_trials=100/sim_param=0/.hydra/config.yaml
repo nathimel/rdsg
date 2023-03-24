@@ -1,0 +1,41 @@
+game:
+  similarity:
+    func: nosofsky_normed
+    param: 0
+  size:
+    num_states: 330
+    num_signals: 330
+  distortion: squared_dist
+explore_space:
+  directions:
+    lower_left: true
+    lower_right: true
+    upper_left: true
+    upper right: true
+  pool_size:
+    seed_generation_size: 10
+    max_mutations: 3
+    num_generations: 10
+simulation:
+  dynamics:
+    name: replicator_dynamic
+    max_its: 200
+    threshold: 1.0e-05
+  num_trials: 100
+  trajectory: true
+  num_variants: 1000
+seed: 42
+multiprocessing: true
+num_processes: null
+filepaths:
+  curve_points_save_fn: curve_points.csv
+  simulation_points_save_fn: simulation_points.csv
+  variant_points_save_fn: variant_points.csv
+  sampled_points_save_fn: sampled_points.csv
+  mean_points_save_fn: mean_points.csv
+  counterpart_points_fn: counterpart_points.csv
+  counterpart_trajectories_fn: counterpart_trajectories.csv
+  tradeoff_plot_fn: tradeoff.png
+  game_subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/distortion=${game.distortion}
+  simulation_subdir: similarity=${game.similarity.func}/dynamics=${simulation.dynamics.name}/num_trials=${simulation.num_trials}/sim_param=${game.similarity.param}
+  leaf_subdir: ${filepaths.game_subdir}/${filepaths.simulation_subdir}
