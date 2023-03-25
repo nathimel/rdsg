@@ -36,6 +36,7 @@ def experiment_parameters(config: dict[str, Any]) -> dict[str, Any]:
         "num_states": config.game.size.num_states,
         "num_signals": config.game.size.num_signals,
         "distortion": config.game.distortion,
+        "prior_type": config.game.prior,
         "similarity": config.game.similarity.func,
         "sim_param": config.game.similarity.param,
         # Explore

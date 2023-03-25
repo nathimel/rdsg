@@ -112,11 +112,12 @@ hydra:
     hydra:
     - hydra.mode=MULTIRUN
     task:
-    - game.size.num_states=330
-    - game.size.num_signals=330
+    - game.size.num_states=10
+    - game.size.num_signals=10
     - game/similarity=nosofsky_normed
     - game.distortion=squared_dist
-    - simulation.num_trials=100
+    - game.prior='random'
+    - simulation.num_trials=6
     - simulation.trajectory=True
     - simulation.num_variants=1000
     - game.similarity.param=0, 1, 2, 4, 6, 8, 16
@@ -124,7 +125,7 @@ hydra:
   job:
     name: run_simulations
     chdir: true
-    override_dirname: game/similarity=nosofsky_normed,simulation.num_variants=1000,simulation.trajectory=True,simulation/dynamics=noisy_replicator_dynamic,
+    override_dirname: game.prior='random',game/similarity=nosofsky_normed,simulation.num_variants=1000,simulation.trajectory=True,simulation/dynamics=noisy_replicator_dynamic,
       replicator_dynamic
     id: ???
     num: ???
@@ -184,9 +185,10 @@ game:
     func: nosofsky_normed
     param: 0
   size:
-    num_states: 330
-    num_signals: 330
+    num_states: 10
+    num_signals: 10
   distortion: squared_dist
+  prior: random
 explore_space:
   directions:
     lower_left: true
@@ -202,7 +204,7 @@ simulation:
     name: reinforcement_learning
     num_rounds: 100000.0
     learning_rate: 1.0
-  num_trials: 100
+  num_trials: 6
   trajectory: true
   num_variants: 1000
 seed: 42
@@ -217,6 +219,6 @@ filepaths:
   counterpart_points_fn: counterpart_points.csv
   counterpart_trajectories_fn: counterpart_trajectories.csv
   tradeoff_plot_fn: tradeoff.png
-  game_subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/distortion=${game.distortion}
+  game_subdir: states=${game.size.num_states}/signals=${game.size.num_signals}/distortion=${game.distortion}/prior=${game.prior}
   simulation_subdir: similarity=${game.similarity.func}/dynamics=${simulation.dynamics.name}/num_trials=${simulation.num_trials}/sim_param=${game.similarity.param}
   leaf_subdir: ${filepaths.game_subdir}/${filepaths.simulation_subdir}

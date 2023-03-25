@@ -10,11 +10,12 @@ SWEEP=(
     )
 
 ARGS=(
-    "game.size.num_states=330"
-    "game.size.num_signals=330"
+    "game.size.num_states=10"
+    "game.size.num_signals=10"
     "game/similarity=nosofsky_normed" 
     "game.distortion=squared_dist" 
-    "simulation.num_trials=100"
+    "game.prior='random'"
+    "simulation.num_trials=6"
     # "explore_space/pool_size=large"
     "simulation.trajectory=True"
     "simulation.num_variants=1000"

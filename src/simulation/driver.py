@@ -10,6 +10,7 @@ from game.agents import Sender, Receiver
 from game.languages import State, Signal, StateSpace, SignalMeaning, SignalingLanguage
 from game.signaling_game import SignalingGame
 from game import perception
+from game.prior import generate_prior_over_states
 from misc.util import points_to_df
 from simulation.dynamics import dynamics_map
 from analysis.measure import agents_to_point
@@ -52,7 +53,7 @@ def game_parameters(
     receiver = Receiver(seed_language, name="receiver")
 
     # specify prior and distortion matrix for all trials
-    kwargs["prior_over_states"] = np.ones(num_states) / num_states
+    kwargs["prior_over_states"] = generate_prior_over_states(num_states, kwargs["prior_type"])
 
     kwargs["dist_mat"] = perception.generate_dist_matrix(universe, kwargs["distortion"])
 

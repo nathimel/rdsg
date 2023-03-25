@@ -1,7 +1,0 @@
-- game.size.num_states=20
-- game.size.num_signals=10
-- game/similarity=nosofsky_normed
-- game.distortion=squared_dist
-- simulation.num_trials=6
-- simulation.trajectory=True
-- simulation.num_variants=1000

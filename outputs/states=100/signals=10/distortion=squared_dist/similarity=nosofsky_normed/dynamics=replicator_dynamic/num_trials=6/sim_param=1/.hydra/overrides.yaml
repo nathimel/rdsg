@@ -1,8 +1,0 @@
-- game.size.num_signals=10
-- game.size.num_states=100
-- simulation/dynamics=replicator_dynamic
-- simulation.num_trials=6
-- game.similarity.param=1
-- game/similarity=nosofsky_normed
-- simulation.trajectory=True
-- multiprocessing=False

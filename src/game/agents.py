@@ -60,14 +60,3 @@ class Receiver(Listener):
             self.expression_to_index(policy["expression"]),
             self.referent_to_index(policy["referent"]),
         )
-
-
-# class BayesianReceiver(Receiver):
-#     """A Bayesian reciever chooses an interpretation deterministically given p(s | w)
-
-#     P(S | W) = P(W | S) * P(S) / P(W)
-#     """
-
-#     def __init__(self, sender: Sender, prior: np.ndarray, name: str = None):
-#         weights = bayes(sender.normalized_weights(), prior)
-#         super().__init__(sender.language, weights=weights, name=name)
