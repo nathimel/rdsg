@@ -114,7 +114,7 @@ def main(config):
     seed_population = result["languages"]
     # id_start = result["id_start"]
 
-    # BUG: God damn it shane
+    # BUG: does not explore all corners, result looks like just random sample
 
     # Step 2: use optimizer as an exploration / sampling method:
     # estimate FOUR pareto frontiers using the evolutionary algorithm; one for each corner of the 2D space of possible langs
@@ -169,7 +169,6 @@ def main(config):
     # )
 
     # Explore corners of the possible language space
-    # TODO: use multiprocessing
     pool = []
     for direction in directions:
         if direction not in kwargs["explore_directions"]:
