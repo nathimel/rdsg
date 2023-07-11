@@ -1,6 +1,5 @@
 import numpy as np
 from altk.effcomm.optimization import Mutation
-
 from game.languages import Signal, SignalingLanguage
 
 

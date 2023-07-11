@@ -5,13 +5,17 @@ import numpy as np
 
 from tqdm import tqdm
 
-from altk.effcomm.sampling import generate_languages
+from altk.language.sampling import generate_languages
 from altk.effcomm.agent import LiteralSpeaker, LiteralListener
 from altk.effcomm.optimization import EvolutionaryOptimizer
 
 from game.languages import SignalingLanguage, StateSpace, Signal, SignalMeaning, State
 from game.signal_mutations import AddSignal, RemoveSignal, InterchangeSignal
-from analysis.rd import information_rate, total_distortion, compute_rate_distortion
+from altk.effcomm.information import (
+    information_rate,
+    expected_distortion,
+    compute_rate_distortion,
+)
 from analysis.measure import agents_to_channel
 from simulation.driver import game_parameters
 
@@ -82,11 +86,11 @@ def main(config):
     dist_mat = game_params["dist_mat"]
 
     complexity_measure = lambda lang: information_rate(
-        p_x=prior,
-        p_xhat_x=lang_to_cond_dist(lang),
+        source=prior,
+        encoder=lang_to_cond_dist(lang),
     )
 
-    comm_cost_measure = lambda lang: total_distortion(
+    comm_cost_measure = lambda lang: expected_distortion(
         p_x=prior,
         p_xhat_x=lang_to_cond_dist(lang),
         dist_mat=dist_mat,
@@ -108,21 +112,42 @@ def main(config):
         verbose=True,
     )
     seed_population = result["languages"]
-    id_start = result["id_start"]
+    # id_start = result["id_start"]
+
+    # BUG: does not explore all corners, result looks like just random sample
 
     # Step 2: use optimizer as an exploration / sampling method:
     # estimate FOUR pareto frontiers using the evolutionary algorithm; one for each corner of the 2D space of possible langs
+    # directions = {
+    #     "lower_left": ("complexity", "comm_cost"),
+    #     "lower_right": ("simplicity", "comm_cost"),
+    #     "upper_left": ("complexity", "informativity"),
+    #     "upper_right": ("simplicity", "informativity"),
+    # }
+    # objectives = {
+    #     "comm_cost": comm_cost_measure,
+    #     "informativity": lambda lang: -1 * comm_cost_measure(lang),
+    #     "complexity": complexity_measure,
+    #     "simplicity": lambda lang: -1 * complexity_measure(lang),
+    # }
+
+    # objective functions
+    comm_cost = comm_cost_measure
+    informativity = lambda lang: -comm_cost_measure(lang)
+    complexity = complexity_measure
+    simplicity = lambda lang: -complexity_measure(lang)
+
     directions = {
-        "lower_left": ("complexity", "comm_cost"),
-        "lower_right": ("simplicity", "comm_cost"),
-        "upper_left": ("complexity", "informativity"),
-        "upper_right": ("simplicity", "informativity"),
+        "lower_left": [complexity, comm_cost],
+        "lower_right": [simplicity, comm_cost],
+        "upper_left": [complexity, informativity],
+        "upper_right": [simplicity, informativity],
     }
-    objectives = {
-        "comm_cost": comm_cost_measure,
-        "informativity": lambda lang: -1 * comm_cost_measure(lang),
-        "complexity": complexity_measure,
-        "simplicity": lambda lang: -1 * complexity_measure(lang),
+    direction_names = {
+        "lower_left": ["complexity", "comm_cost"],
+        "lower_right": ["simplicity", "comm_cost"],
+        "upper_left": ["complexity", "informativity"],
+        "upper_right": ["simplicity", "informativity"],
     }
 
     # Load signal-specific mutations
@@ -133,40 +158,45 @@ def main(config):
     ]
 
     # Initialize optimizer
-    optimizer = EvolutionaryOptimizer(
-        objectives=objectives,
-        expressions=expressions,
-        mutations=mutations,
-        sample_size=seed_size,
-        max_mutations=max_mutations,
-        generations=generations,
-        lang_size=lang_size,
-    )
+    # optimizer = EvolutionaryOptimizer(
+    #     objectives=objectives,
+    #     expressions=expressions,
+    #     mutations=mutations,
+    #     sample_size=seed_size,
+    #     max_mutations=max_mutations,
+    #     generations=generations,
+    #     lang_size=lang_size,
+    # )
 
     # Explore corners of the possible language space
-    # TODO: use multiprocessing
-    results = {k: None for k in directions}
     pool = []
     for direction in directions:
         if direction not in kwargs["explore_directions"]:
             continue
 
-        # set directions of optimization
-        x, y = directions[direction]
-        optimizer.x = x
-        optimizer.y = y
+        objective_pair = directions[direction]
+
+        optimizer = EvolutionaryOptimizer(
+            objectives=objective_pair,
+            expressions=expressions,
+            mutations=mutations,
+            sample_size=seed_size,
+            max_mutations=max_mutations,
+            generations=generations,
+            lang_size=lang_size,
+        )
+
+        x, y = direction_names[direction]
         print(f"Optimizing for {direction} region (min {x}, {y}) ...")
 
         # run algorithm
         result = optimizer.fit(
             seed_population=seed_population,
-            id_start=id_start,
+            # id_start=id_start,
         )
 
-        # collect results
-        results[direction] = result
-        id_start = result["id_start"]
-        pool.extend(results[direction]["explored_languages"])
+        # id_start = result["id_start"]
+        pool.extend(result["explored_languages"])
 
     pool = list(set(pool))
 

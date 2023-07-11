@@ -2,8 +2,7 @@
 
 import numpy as np
 from game.languages import StateSpace, State
-from typing import Callable
-from analysis.tools import distortion_measures
+from analysis.measure import distortion_measures
 
 
 def generate_dist_matrix(
@@ -21,7 +20,7 @@ def generate_dist_matrix(
         [
             np.array(
                 [
-                    distortion_measures[distortion](t.weight, u.weight)
+                    distortion_measures[distortion](t.data, u.data)
                     for u in universe.referents
                 ]
             )
@@ -46,8 +45,8 @@ def generate_sim_matrix(universe: StateSpace, similarity: str, **kwargs) -> np.n
     return np.array(
         [
             sim_func(
-                target=t.weight,
-                objects=[u.weight for u in universe.referents],
+                target=t.data,
+                objects=[u.data for u in universe.referents],
                 **kwargs,
             )
             for t in universe.referents
@@ -172,4 +171,4 @@ similarity_functions = {
 
 
 def sim_utility(x: State, y: State, sim_mat: np.ndarray) -> float:
-    return sim_mat[int(x.weight), int(y.weight)]
+    return sim_mat[int(x.data), int(y.data)]

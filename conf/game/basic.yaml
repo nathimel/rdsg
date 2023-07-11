@@ -3,3 +3,4 @@ defaults:
  - size: ten
 
 distortion: squared_dist # squared_dist or abs_dist
+prior: uniform # uniform or random or dirac

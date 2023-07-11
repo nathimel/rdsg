@@ -2,10 +2,27 @@
 
 import numpy as np
 import pandas as pd
-from analysis.rd import compute_rate_distortion
+from altk.effcomm.information import compute_rate_distortion
 from altk.effcomm.agent import Speaker, Listener
 from altk.effcomm.tradeoff import interpolate_data
 from scipy.spatial.distance import cdist
+
+
+PRECISION = 1e-16
+
+# Distortion measures
+def abs_dist(t: int, u: int) -> float:
+    return np.abs(t - u)
+
+
+def squared_dist(t: int, u: int) -> float:
+    return (t - u) ** 2
+
+
+distortion_measures = {
+    "abs_dist": abs_dist,
+    "squared_dist": squared_dist,
+}
 
 
 def agents_to_point(

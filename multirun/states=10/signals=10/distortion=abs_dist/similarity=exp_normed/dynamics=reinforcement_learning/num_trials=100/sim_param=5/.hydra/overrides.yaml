@@ -1,6 +1,0 @@
-- game/similarity=exp_normed
-- game.distortion=abs_dist
-- simulation.num_trials=100
-- explore_space/pool_size=large
-- game.similarity.param=5
-- simulation/dynamics=reinforcement_learning

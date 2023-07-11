@@ -5,10 +5,12 @@ import pandas as pd
 from tqdm import tqdm
 from typing import Any
 
-from game.agents import Sender, Receiver, BayesianReceiver
+from altk.effcomm.agent import BayesianListener
+from game.agents import Sender, Receiver
 from game.languages import State, Signal, StateSpace, SignalMeaning, SignalingLanguage
 from game.signaling_game import SignalingGame
 from game import perception
+from game.prior import generate_prior_over_states
 from misc.util import points_to_df
 from simulation.dynamics import dynamics_map
 from analysis.measure import agents_to_point
@@ -39,7 +41,7 @@ def game_parameters(
     signal_names = [f"signal_{i}" for i in range(num_signals)]
 
     # Construct the universe of states, and language defined over it
-    universe = StateSpace([State(name=str(name), weight=name) for name in state_names])
+    universe = StateSpace([State(name=str(name)) for name in state_names])
 
     # All meanings are dummy placeholders at this stage, but they can be substantive once agents are given a weight matrix.
     dummy_meaning = SignalMeaning(states=[], universe=universe)
@@ -51,7 +53,7 @@ def game_parameters(
     receiver = Receiver(seed_language, name="receiver")
 
     # specify prior and distortion matrix for all trials
-    kwargs["prior_over_states"] = np.ones(num_states) / num_states
+    kwargs["prior_over_states"] = generate_prior_over_states(num_states, kwargs["prior_type"])
 
     kwargs["dist_mat"] = perception.generate_dist_matrix(universe, kwargs["distortion"])
 
@@ -172,11 +174,8 @@ def trajectory_points_to_df(trajectory_points: list[tuple[float]]) -> pd.DataFra
     return points_df
 
 
-def trials_to_df(
-    signaling_games: list[SignalingGame],
-    trajectory: bool = False,
-) -> list[tuple[float]]:
-    """Compute the pareto points for a list of resulting simulation languages, based on the distributions of their senders.
+def trials_to_df(signaling_games: list[SignalingGame]) -> list[tuple[float]]:
+    """Compute the pareto points for a list of resulting simulation languages, based on the distributions of their senders, receiver.
 
     Args:
         trials: a list of SignalingGames after convergence
@@ -186,15 +185,6 @@ def trials_to_df(
     Returns:
         df: a pandas DataFrame of (rate, distortion) points
     """
-
-    if trajectory:
-        return pd.concat(
-            [
-                trajectory_points_to_df(trajectory_points=sg.data["points"])
-                for sg in signaling_games
-            ]
-        )
-
     return points_to_df([sg.data["points"][-1] for sg in signaling_games])
 
 
@@ -219,18 +209,15 @@ def get_hypothetical_variants(games: list[SignalingGame], num: int) -> pd.DataFr
             permuted = np.random.permutation(sender.weights.T).T
             seen.add(tuple(permuted.flatten()))
 
-        variant_points = [
-            agents_to_point(
-                speaker=Sender(
-                    language=game.sender.language,
-                    weights=np.reshape(permuted_weights, (game.sender.shape)),
-                ),
-                listener=BayesianReceiver(sender, game.prior),
-                prior=game.prior,
-                dist_mat=game.dist_mat,
+        for permuted_weights in seen:
+            speaker = Sender(
+                language=game.sender.language,
+                weights=np.reshape(permuted_weights, (game.sender.shape)),
             )
-            for permuted_weights in seen
-        ]
-        points.extend(variant_points)
+            listener = BayesianListener(
+                game.sender, game.prior
+            )  # use original (not permuted) sender otherwise we end up with the same system
+            point = agents_to_point(speaker, listener, game.prior, game.dist_mat)
+            points.append(point)
 
     return points_to_df(points)

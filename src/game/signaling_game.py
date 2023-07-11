@@ -1,7 +1,6 @@
 """Class for a signaling game."""
 
 import numpy as np
-import pandas as pd
 from game.languages import State, Signal
 from game.agents import Sender, Receiver
 
