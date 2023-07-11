@@ -206,21 +206,13 @@ class NoisyDiscreteTimeReplicatorDynamic(Dynamics):
                 )
             )
 
-            # # re-measure population-sensitive expected utilities for agents
-            U_sender = np.array(
-                [[R[w] @ U[s] for w in range(n_signals)] for s in range(n_states)]
-            )
-            S *= U_sender
+            # Update mean Sender
+            S *= (R @ U).T # population-dependent utility
             S = normalize_rows(S)
             S = C @ S
 
-            U_receiver = np.array(
-                [
-                    [(prior * S[:, w]) @ U[s] for s in range(n_states)]
-                    for w in range(n_signals)
-                ]
-            )
-            R *= U_receiver
+            # Update mean Receiver
+            R *= prior * (U @ R).T # population-dependent utility
             R = normalize_rows(R)
             R = R @ C
 
