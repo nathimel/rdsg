@@ -1,0 +1,6 @@
+- game/similarity=nosofsky_normed
+- game.distortion=squared_dist
+- simulation.num_trials=100
+- simulation.num_variants=1000
+- game.similarity.param=1
+- simulation/dynamics=replicator_dynamic

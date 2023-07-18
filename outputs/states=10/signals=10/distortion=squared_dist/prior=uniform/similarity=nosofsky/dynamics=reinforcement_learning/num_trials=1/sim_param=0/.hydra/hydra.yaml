@@ -138,18 +138,18 @@ hydra:
   runtime:
     version: 1.3.1
     version_base: '1.3'
-    cwd: /Users/nathanielimel/lps/projects/rdsg
+    cwd: /Users/nathanielimel/uci/projects/rdsg
     config_sources:
     - path: hydra.conf
       schema: pkg
       provider: hydra
-    - path: /Users/nathanielimel/lps/projects/rdsg/conf
+    - path: /Users/nathanielimel/uci/projects/rdsg/conf
       schema: file
       provider: main
     - path: ''
       schema: structured
       provider: schema
-    output_dir: /Users/nathanielimel/lps/projects/rdsg/outputs/states=10/signals=10/distortion=squared_dist/prior=uniform/similarity=nosofsky/dynamics=reinforcement_learning/num_trials=1/sim_param=0
+    output_dir: /Users/nathanielimel/uci/projects/rdsg/outputs/states=10/signals=10/distortion=squared_dist/prior=uniform/similarity=nosofsky/dynamics=reinforcement_learning/num_trials=1/sim_param=0
     choices:
       simulation: basic
       simulation/dynamics: reinforcement_learning
