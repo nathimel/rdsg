@@ -70,3 +70,23 @@ This will perform four basic steps by running the following scripts:
     Produce a basic plot of the emergent and explored systems compared to the Pareto frontier of optimal solutions.
 
     Code for the more detailed plots from the paper can be found in [notebooks/paper_figures.ipynb](src/notebooks/paper_figures.ipynb).
+
+## References
+
+This repo uses code from the following repositories:
+
+- Noga Zaslavsky's [ib-color-naming](https://github.com/nogazs/ib-color-naming) model,
+- Michael Franke and Pedro Correia's [vagueness-games](https://github.com/josepedrocorreia/vagueness-games) simulations.
+
+To cite this work, please use the following:
+
+```
+@inproceedings{Imel2023,
+  author    = {Imel, Nathaniel},
+  title     = {The evolution of efficient compression in signaling games},
+  year      = {2023},
+  booktitle = {Proceedings of the Annual Meeting of the Cognitive Science Society},
+  volume    = {45},
+  url = {https://escholarship.org/uc/item/5dr5h4q0},
+}
+```
